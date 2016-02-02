@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+'use strict';
+
+process.title = 'vinli';
+
+const program = require('commander');
+const config = require('../package.json');
+
+program
+  .version(config.version)
+  .command('list', 'List applications')
+  .command('create', 'Create new application')
+  .command('set-current', 'Save application id and secret to .vinlirc')
+  .parse(process.argv);

@@ -1,0 +1,70 @@
+#!/usr/bin/env node
+'use strict';
+
+const _ = require('lodash');
+const App = require('../lib/app');
+const B = require('bluebird');
+const colors = require('colors');  // eslint-disable-line no-unused-vars
+const devPortal = require('../lib/service')('dev');
+const program = require('commander');
+const prompt = B.promisifyAll(require('prompt'));
+const sessionYarp = require('../lib/session_yarp').dev;
+const vinlirc = require('../lib/vinlirc');
+
+program
+  .description('Save app info to .vinlirc for easy access by other commands')
+  .option('--app [nameOrId]', 'required')
+  .option('--secret [secret]', 'optional, if known')
+  .option('--email [email]', 'email address for your developer (dev.vin.li) account if need to look up id and secret')
+  .option('--password [password]', 'not saved')
+  .option('-g, --global', 'save to .vinlirc in your home directory instead')
+  .parse(process.argv);
+
+prompt.message = 'Developer Account'.cyan;
+prompt.delimiter = ':'.cyan;
+prompt.start();
+
+if (!(program.app)) {
+  program.help();
+}
+
+B.resolve()
+  .then(() => {
+    if (program.app && App.isId(program.app) && program.secret) {
+      const a = {};
+      a.app = _.get(program, 'app');
+      a.secret = _.get(program, 'secret');
+      a.appName = null;
+      return a;
+    }
+    return B.props({
+      response: prompt.getAsync([
+        {
+          name: 'email',
+          default: program.email
+        },
+        {
+          name: 'password',
+          default: program.password,
+          hidden: true
+        }
+      ])
+    })
+    .then((clump) => {
+      console.log(`\nSigning in to ${clump.response.email} developer account...`);
+      const options = {
+        url: `${devPortal}/api/v1/apps`
+      };
+      return sessionYarp(clump.response.email, clump.response.password, options);
+    })
+    .then((resp) => App.find(program, resp.apps));
+  })
+  .tap((appSettings) => console.log(`Setting Current: ${appSettings.appName || appSettings.app}`))
+  .then((appSettings) => vinlirc.save(appSettings, program.global))
+  .then((file) => console.log(`Saved to ${file}`.green))
+  .catch((err) => {
+    if (err.message === 'canceled') {
+      return console.log('\nYou can also save to VINLI_APP and VINLI_SECRET environment variables or use --app --secret parameters or enter at prompt'.cyan);
+    }
+    return console.log(`\t${err.message}`.red);
+  });

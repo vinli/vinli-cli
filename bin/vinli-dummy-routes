@@ -1,0 +1,69 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const program = require('commander');
+const yarp = require('yarp');
+const _ = require('lodash');
+const Output = require('../lib/output');
+const service = require('../lib/service');
+const vinlirc = require('../lib/vinlirc');
+
+const dummyService = service('dummy');
+
+program
+  .description('Get a list of dummy devices')
+  .option('--app [app id]')
+  .option('--secret [app secret]')
+  .option('--limit [number]')
+  .option('--offset [number]')
+  .option('-o, --output <table|text|csv|json|yaml>')
+  .parse(process.argv);
+
+B.resolve(vinlirc.read(program))
+  .then((options) =>
+    yarp({
+      url: `${dummyService}/api/v1/routes`,
+      qs: {
+        limit: _.get(program, 'limit', 100),
+        offset: _.get(program, 'offset', 0)
+      },
+      auth: {
+        user: options.app,
+        pass: options.secret
+      }
+    })
+  )
+  .then((resp) => {
+    Output.printList(program.output, resp, 'routes', [{
+      title: 'ID',
+      key: 'id'
+    }, {
+      title: 'Name',
+      key: 'name'
+    }, {
+      title: 'Description',
+      key: 'description',
+      width: 40,
+      wrapWord: true
+    }, {
+      title: 'Dist (m)',
+      key: 'distanceByVSS',
+      alignment: 'right'
+    }, {
+      title: 'Time (s)',
+      key: 'duration',
+      alignment: 'right',
+      format: (v) => Math.floor(v / 1000)
+    }, {
+      title: 'Msgs',
+      key: 'messageCount',
+      alignment: 'right'
+    }, {
+      title: 'Locs',
+      key: 'locationCount',
+      alignment: 'right'
+    }]);
+  })
+  .catch(require('../lib/error_handler'))
+  .done();

@@ -1,0 +1,106 @@
+#!/usr/bin/env node
+'use strict';
+
+const _ = require('lodash');
+const B = require('bluebird');
+const dummy = require('../lib/dummy');
+const program = require('commander');
+const prompt = B.promisifyAll(require('prompt'));
+const service = require('../lib/service');
+const sessionYarp = require('../lib/session_yarp').auth;
+const vinlirc = require('../lib/vinlirc');
+
+const authService = service('auth');
+
+prompt.message = 'Add Device'.cyan;
+prompt.delimiter = ':'.cyan;
+prompt.start();
+
+program
+  .description('Register a device on a MyVinli account.  Will use current device from .vinlirc if no caseId or dummy specified') // eslint-disable-line max-len
+  .option('--email [email]', 'email address for MyVinli account')
+  .option('--password [password]', 'not saved')
+  .option('--case-id [case id]', 'Only caseId OR dummy can be specified')
+  .option('--dummy [nameOrId]', 'Only caseId OR dummy can be specified')
+  .option('--app [Id]', 'required if not providing case-id and current app not set in vinlirc')
+  .option('--secret [secret]', 'required if not providing case-id and current app not set in vinlirc')
+  .option('--device-name [name]', 'Optional')
+  .parse(process.argv);
+
+if (program.dummy && program.caseId) {
+  console.log('Only dummy OR case-id can be set'.red);
+}
+
+const addDevice = (email, password, caseId, name) => {
+  return B.resolve()
+    .then(() => {
+      console.log(`\nSigning in to ${email} MyVinli account...`);
+
+      return sessionYarp(email, password, {
+        method: 'POST',
+        url: `${authService}/api/v1/devices`,
+        formData: {
+          'device[caseId]': caseId,
+          'device[name]': name
+        }
+      });
+    }).then(() => console.log('\tDevice Added'.green))
+    .catch((err) => {
+      if (err.statusCode) {
+        throw new Error(err.data.message);
+      }
+      throw err;
+    });
+};
+
+B.resolve(vinlirc.read(program))
+  .then((options) => {
+    return prompt.getAsync([
+      {
+        name: 'email',
+        default: program.email,
+        required: true,
+        description: 'MyVinli email account'
+      },
+      {
+        name: 'password',
+        default: program.password,
+        hidden: true,
+        required: true,
+        description: 'MyVinli password (not saved)'
+      },
+      {
+        name: program.caseId ? 'caseId' : 'dummy',
+        default: program.caseId ? _.get(options, 'caseId') : _.get(options, 'dummy')
+      },
+      {
+        name: 'name',
+        default: _.get(options, 'name') || _.get(options, 'dummyName') || 'CLI Vinli',
+        description: 'MyVinli device name'
+      }
+    ]).then((prompts) => _.merge(options, prompts));
+  })
+  .then((options) => {
+    if (program.dummy) {
+      if (!(options.app && options.secret)) {
+        throw new Error('Must specify --app & --secret parameters or save to vinlirc with `vinli-cli app set-current`');
+      }
+      return dummy.find(options)
+        .then((dum) => _.merge(options, dum));
+    }
+    return options;
+  })
+  .then((options) => {
+    return addDevice(
+      options.email,
+      options.password,
+      options.caseId,
+      options.name);
+  })
+  .catch((err) => {
+    if (err.message === 'canceled') {
+      return console.log('\nYou can always add a device to your account at https://my.vin.li'.cyan);
+    }
+    console.log(`\t${err.message.red}`);
+  })
+  .done();

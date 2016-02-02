@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+'use strict';
+
+process.title = 'vinli';
+
+const program = require('commander');
+const config = require('../package.json');
+
+program
+  .version(config.version)
+  .command('list', 'List devices')
+  .command('snapshots', 'Retrieve telemetry snapshots')
+  .command('locations', 'Retrieve device location history')
+  .command('vehicles', 'Retrieve device vehicle history')
+  .command('set-current', 'Save a device id to .vinlirc for easy retrieval by other commands')
+  .parse(process.argv);

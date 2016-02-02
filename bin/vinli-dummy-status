@@ -1,0 +1,92 @@
+#!/usr/bin/env node
+'use strict';
+
+const _ = require('lodash');
+const B = require('bluebird');
+const dummy = require('../lib/dummy');
+const Output = require('../lib/output');
+const program = require('commander');
+const service = require('../lib/service');
+const vinlirc = require('../lib/vinlirc');
+const yarp = require('yarp');
+
+const dummyService = service('dummy');
+
+program
+  .description('Get a list of dummy devices')
+  .option('--app [app id]')
+  .option('--secret [app secret]')
+  .option('--dummy <id|name>')
+  .option('-o, --output <table|text|csv|json|yaml>')
+  .parse(process.argv);
+
+B.resolve(vinlirc.read(program))
+  .then((options) => {
+    if (options.dummy) {
+      return options;
+    }
+    return B.props(_.merge(options, dummy.find(options)));
+  })
+  .then((options) =>
+    B.props({
+      resp: yarp({
+        url: `${dummyService}/api/v1/dummies/${options.dummy}/runs/_current`,
+        auth: {
+          user: options.app,
+          pass: options.secret
+        }
+      }),
+      options: options
+    })
+  )
+  .then((clump) => {
+    return B.props(_.merge(clump, {
+      route: _.get(clump, 'resp.run.status.routeId') ? yarp({
+        url: `${dummyService}/api/v1/routes/${clump.resp.run.status.routeId}`,
+        auth: {
+          user: clump.options.app,
+          pass: clump.options.secret
+        }
+      }) : null
+    }));
+  })
+  .then((clump) => {
+    if (clump.resp.run) {
+      if (_.get(clump, 'route.route.name')) {
+        clump.resp.run.routeName = _.get(clump, 'route.route.name');
+      } else {
+        clump.resp.run.routeName = 'Unknown';
+      }
+
+      Output.printItem(program.output, clump.resp.run, [{
+        title: 'Route',
+        key: 'routeName'
+      }, {
+        title: 'Status',
+        key: 'status.state'
+      }, {
+        title: 'Repeat',
+        key: 'status.repeat'
+      }, {
+        title: 'Repeat Count',
+        key: 'status.repeatCount',
+        alignment: 'right'
+      }, {
+        title: 'Speed (kph)',
+        key: 'status.lastSpeed',
+        alignment: 'right'
+      }, {
+        title: 'Remaining (s)',
+        key: 'status.remainingSeconds',
+        alignment: 'right'
+      }, {
+        title: 'Remaining Msgs',
+        key: 'status.remainingMessages',
+        alignment: 'right'
+      }]);
+    } else {
+      console.log('No current run');
+    }
+  })
+  .catch(require('../lib/error_handler'))
+  .done();

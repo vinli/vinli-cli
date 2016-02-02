@@ -1,0 +1,50 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const program = require('commander');
+const yarp = require('yarp');
+const _ = require('lodash');
+const Output = require('../lib/output');
+const service = require('../lib/service');
+const vinlirc = require('../lib/vinlirc');
+
+const dummyService = service('dummy');
+
+program
+  .description('Get a list of dummy devices')
+  .option('--app [app id]')
+  .option('--secret [app secret]')
+  .option('-o, --output [format]', 'Output format, <table|json|yaml|text>, default: table', /^(json|table|text|yaml)$/i, 'table')
+  .parse(process.argv);
+
+B.resolve(vinlirc.read(program))
+  .then((options) =>
+    yarp({
+      url: `${dummyService}/api/v1/dummies`,
+      qs: {
+        limit: _.get(program, 'limit', 10)
+      },
+      auth: {
+        user: options.app,
+        pass: options.secret
+      }
+    })
+  )
+  .then((resp) => {
+    Output.printList(program.output, resp, 'dummies', [{
+      title: 'ID',
+      key: 'id'
+    }, {
+      title: 'Name',
+      key: 'name'
+    }, {
+      title: 'Device ID',
+      key: 'deviceId'
+    }, {
+      title: 'Case ID',
+      key: 'caseId'
+    }]);
+  })
+  .catch(require('../lib/error_handler'))
+  .done();

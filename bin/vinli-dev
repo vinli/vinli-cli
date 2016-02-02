@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+'use strict';
+
+process.title = 'vinli';
+
+const program = require('commander');
+const config = require('../package.json');
+
+program
+  .version(config.version)
+  .command('signup', 'Create an account on the Developer Portal')
+  .parse(process.argv);

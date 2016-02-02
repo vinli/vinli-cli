@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+'use strict';
+
+process.title = 'vinli';
+
+const program = require('commander');
+const config = require('../package.json');
+
+program
+  .version(config.version)
+  .command('add-device', 'Add device to MyVinli account')
+  .command('authorize', 'Authorize a Myvinli user with an oauth client')
+  .parse(process.argv);

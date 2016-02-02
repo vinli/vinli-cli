@@ -1,0 +1,65 @@
+#!/usr/bin/env node
+'use strict';
+
+const _ = require('lodash');
+const B = require('bluebird');
+const dummy = require('../lib/dummy');
+const program = require('commander');
+const route = require('../lib/route');
+const service = require('../lib/service');
+const vinlirc = require('../lib/vinlirc');
+const yarp = require('yarp');
+
+const dummyService = service('dummy');
+
+program
+  .description('Get a list of dummy devices')
+  .option('--app [app id]')
+  .option('--secret [app secret]')
+  .option('--dummy <id|name>')
+  .option('--route <id|name>')
+  .option('--vin <vin number>')
+  .option('--repeat')
+  .option('-o, --output <table|text|csv|json|yaml>')
+  .parse(process.argv);
+
+const randomVin = () => {
+  let text = 'VV';
+  const possible = 'ABCDEFGHJKLMPRSTUVWXYZ0123456789';
+
+  for (let i = text.length; i < 17; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+
+  return text;
+};
+
+B.resolve(vinlirc.read(program))
+  .then((options) =>
+    B.props(_.merge(options, {
+      dummyFind: dummy.find(options),
+      routeFind: route.find(options),
+      vin: program.vin || randomVin()
+    }))
+  )
+  .tap((options) => console.log(`Starting run of ${options.routeFind.routeName || options.routeFind.route} for dummy ${options.dummyFind.dummyName || options.dummyFind.dummy} (${options.vin})...`))
+  .then((options) =>
+    yarp({
+      method: 'POST',
+      url: `${dummyService}/api/v1/dummies/${options.dummyFind.dummy}/runs`,
+      json: {
+        run: {
+          vin: options.vin,
+          routeId: options.routeFind.route,
+          repeat: Boolean(program.repeat)
+        }
+      },
+      auth: {
+        user: options.app,
+        pass: options.secret
+      }
+    })
+  )
+  .then(() => console.log('Run started'))
+  .catch(require('../lib/error_handler'))
+  .done();

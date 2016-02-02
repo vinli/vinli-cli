@@ -1,0 +1,74 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const colors = require('colors');  // eslint-disable-line no-unused-vars
+const devPortal = require('../lib/service')('dev');
+const Output = require('../lib/output');
+const program = require('commander');
+const prompt = B.promisifyAll(require('prompt'));
+const sessionYarp = require('../lib/session_yarp').dev;
+
+program
+  .description('Get a list of applications available to a developer account')
+  .option('--email [email]', 'email address for your developer (dev.vin.li) account')
+  .option('--password [password]', 'not saved')
+  .option('-o, --output [format]', 'Output format, <table|json|yaml|text>, default: table', /^(json|table|text|yaml)$/i, 'table')
+  .parse(process.argv);
+
+prompt.message = 'Developer Account'.cyan;
+prompt.delimiter = ':'.cyan;
+prompt.start();
+
+const listApps = (email, password) => {
+  const options = {
+    url: `${devPortal}/api/v1/apps`
+  };
+  return sessionYarp(email, password, options)
+    .then((resp) =>
+      Output.printList(program.output, resp, 'apps', [{
+        title: 'ID',
+        key: 'id'
+      }, {
+        title: 'Name',
+        key: 'name'
+      }, {
+        title: 'Description',
+        key: 'description'
+      }, {
+        title: 'Created',
+        key: 'createdAt',
+        format: (date) => new Date(date).toString()
+      }])
+    );
+};
+
+B.resolve()
+  .then(() => {
+    return B.props({
+      response: prompt.getAsync([
+        {
+          name: 'email',
+          default: program.email
+        },
+        {
+          name: 'password',
+          default: program.password,
+          hidden: true
+        }
+      ])
+    });
+  })
+  .then((clump) => {
+    console.log(`\nSigning in to ${clump.response.email} developer account...`);
+    return listApps(
+      clump.response.email,
+      clump.response.password);
+  })
+  .catch((err) => {
+    if (err.message === 'canceled') {
+      return console.log('\nYou can always view your apps at https://dev.vin.li'.cyan);
+    }
+    return console.log(`\t${err.message}`.red);
+  })
+  .done();

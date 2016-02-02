@@ -1,0 +1,89 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const program = require('commander');
+const prompt = B.promisifyAll(require('prompt'));
+const yarp = require('yarp');
+const _ = require('lodash');
+const service = require('../lib/service');
+const vinlirc = require('../lib/vinlirc');
+const colors = require('colors/safe');
+const dummy = require('../lib/dummy');
+
+const dummyService = service('dummy');
+
+program
+  .description('Get a list of dummy devices')
+  .option('--app [app id]')
+  .option('--secret [app secret]')
+  .option('--dummy <id|name>')
+  .parse(process.argv);
+
+B.resolve(vinlirc.read(program))
+  .then((options) => {
+    return dummy.find(options)
+      .then((dum) => _.merge(options, dum));
+  })
+  .then((options) => {
+    if (!(options.app && options.secret)) {
+      throw new Error('Must specify --app & --secret parameters or save to vinlirc with `vinli-cli app set-current`');
+    }
+
+    return B.props({
+      resp: yarp({
+        url: `${dummyService}/api/v1/dummies/${options.dummy}/runs/_current`,
+        auth: {
+          user: options.app,
+          pass: options.secret
+        }
+      }),
+      options: options
+    });
+  })
+  .then((clump) => {
+    return B.props(_.merge(clump, {
+      route: _.get(clump, 'resp.run.status.routeId') ? yarp({
+        url: `${dummyService}/api/v1/routes/${clump.resp.run.status.routeId}`,
+        auth: {
+          user: clump.options.app,
+          pass: clump.options.secret
+        }
+      }) : null
+    }));
+  })
+  .tap((clump) => {
+    if (clump.resp.run) {
+      console.log(colors.red.bold('\n    Device is currently on an active run!'));
+    }
+    console.log('');
+    console.log(`Are you sure you want to delete dummy device ${clump.options.dummyName}?`);
+    console.log('After deleting, you will not be able to reclaim the device.\n');
+
+    prompt.start();
+    return prompt.getAsync([{
+      name: 'confirm',
+      message: 'Are you sure (y/N)?',
+      validator: /y[es]*|n[o]?/i,
+      warning: 'Must respond yes or no',
+      default: 'N'
+    }]).then((resp) => {
+      if (!/^[yY]/.test(resp.confirm)) {
+        console.log('Exiting...');
+        process.exit(0);
+      }
+    });
+  })
+  .then((clump) => {
+    return yarp({
+      method: 'DELETE',
+      url: `${dummyService}/api/v1/dummies/${clump.options.dummy}`,
+      auth: {
+        user: clump.options.app,
+        pass: clump.options.secret
+      }
+    });
+  })
+  .then(() => console.log(colors.green('\tDummy device deleted')))
+  .catch(require('../lib/error_handler'))
+  .done();

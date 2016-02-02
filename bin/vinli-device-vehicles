@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const program = require('commander');
+const yarp = require('yarp');
+const _ = require('lodash');
+const Output = require('../lib/output');
+const service = require('../lib/service');
+const parameters = require('../lib/parameters.json');
+const moment = require('moment');
+const vinlirc = require('../lib/vinlirc');
+
+const platformService = service('platform');
+
+program
+  .description('Get telemetry snapshots for a device')
+  .option('--app [app id]')
+  .option('--secret [app secret]')
+  .option('--device [device id]')
+  .option('--limit [number]')
+  .option('--offset [number]')
+  .option('-o, --output [number]')
+  .parse(process.argv);
+
+B.resolve(vinlirc.read(program))
+  .then((options) =>
+    yarp({
+      url: `${platformService}/api/v1/devices/${options.device}/vehicles`,
+      qs: {
+        limit: _.get(program, 'limit', 10),
+        offset: _.get(program, 'offset', 0)
+      },
+      auth: {
+        user: options.app,
+        pass: options.secret
+      }
+    })
+  )
+  .then((resp) => {
+    const headers = [{
+      title: 'Last Startup',
+      key: 'lastStartup',
+      format: (date) => moment(date).format('YYYY-MM-DD HH:mm:ss ZZ')
+    }, {
+      title: 'ID',
+      key: 'id'
+    }, {
+      title: 'VIN',
+      key: 'vin'
+    }, {
+      title: 'Year',
+      key: 'year',
+      format: (v) => (v || '')
+    }, {
+      title: 'Make',
+      key: 'make',
+      format: (v) => (v || '')
+    }, {
+      title: 'Model',
+      key: 'model',
+      format: (v) => (v || '')
+    }, {
+      title: 'Trim',
+      key: 'trim',
+      format: (v) => (v || '')
+    }];
+
+    Output.printList(program.output, resp, 'vehicles', headers);
+  })
+  .catch(require('../lib/error_handler'))
+  .done();

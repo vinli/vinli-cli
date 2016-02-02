@@ -1,0 +1,76 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const program = require('commander');
+const yarp = require('yarp');
+const _ = require('lodash');
+const Output = require('../lib/output');
+const service = require('../lib/service');
+const parameters = require('../lib/parameters.json');
+const moment = require('moment');
+const vinlirc = require('../lib/vinlirc');
+
+const telemetryService = service('telemetry');
+
+const list = function(val) {
+  return val.split(',');
+};
+
+program
+  .description('Get location coordinates for a device')
+  .option('--app [app id]')
+  .option('--secret [app secret]')
+  .option('--device [device id]')
+  .option('--fields [fields]', 'A list', list)
+  .option('--limit [number]')
+  .option('--since [date]')
+  .option('--until [date]')
+  .option('-o, --output [number]')
+  .parse(process.argv);
+
+B.resolve(vinlirc.read(program))
+  .then((options) =>
+    yarp({
+      url: `${telemetryService}/api/v1/devices/${options.device}/locations`,
+      qs: {
+        limit: _.get(program, 'limit', 10),
+        fields: program.fields ? _.get(program, 'fields', []).join(',') : undefined
+      },
+      auth: {
+        user: options.app,
+        pass: options.secret
+      }
+    })
+  )
+  .then((resp) => {
+    const headers = [{
+      title: 'Timestamp',
+      key: 'properties.timestamp',
+      format: (date) => moment(date).format('YYYY-MM-DD HH:mm:ss ZZ')
+    }, {
+      title: 'ID',
+      key: 'properties.id'
+    }, {
+      title: 'Longitude',
+      key: 'geometry.coordinates[0]'
+    }, {
+      title: 'Latitude',
+      key: 'geometry.coordinates[1]'
+    }];
+
+    _.each(program.fields, (field) => {
+      headers.push({
+        title: _.get(parameters, `${field}.name`) || field,
+        key: `properties.data.${field}`,
+        alignment: 'right',
+        format: (v) => {
+          return v === null ? 0 : v;
+        }
+      });
+    });
+
+    Output.printList(program.output, resp, 'locations.features', headers);
+  })
+  .catch(require('../lib/error_handler'))
+  .done();

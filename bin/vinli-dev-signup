@@ -1,0 +1,68 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const colors = require('colors');  // eslint-disable-line no-unused-vars
+const program = require('commander');
+const prompt = B.promisifyAll(require('prompt'));
+const service = require('../lib/service');
+const yarp = require('yarp');
+
+const devPortal = service('dev');
+
+program
+  .description('Create a developer account.  Pass in options or enter them at prompt')
+  .option('--first-name [firstName]')
+  .option('--last-name [lastName]')
+  .option('--email [email]', 'will send a confirmation to this address')
+  .option('--password [password]')
+  .parse(process.argv);
+
+prompt.message = 'signup'.cyan;
+prompt.delimiter = ':'.cyan;
+prompt.start();
+
+console.log('Let\'s create your developer account: ');
+prompt.getAsync([
+  {
+    name: 'firstName',
+    default: program.firstName
+  },
+  {
+    name: 'lastName',
+    default: program.lastName
+  },
+  {
+    name: 'email',
+    default: program.email
+  },
+  {
+    name: 'password',
+    default: program.password,
+    hidden: true
+  }
+])
+.tap(() => console.log('Creating your account ...'))
+.then((login) =>
+  yarp({
+    method: 'POST',
+    url: `${devPortal}/api/v1/users`,
+    json: {
+      user: {
+        firstName: login.firstName,
+        lastName: login.lastName,
+        email: login.email,
+        password: login.password
+      }
+    }
+  })
+)
+.then(() => console.log('Check your email'.green))
+.catch((err) => {
+  if (err.message === 'canceled') {
+    return console.log('\nVinli will be here when you need us');
+  }
+  if (err.data && err.data.message) {
+    return console.log(`\t${err.data.message}`.red);
+  }
+});

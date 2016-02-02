@@ -1,0 +1,157 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const prompt = B.promisifyAll(require('prompt'));
+const program = require('commander');
+const yarp = require('yarp');
+const Cheerio = require('cheerio');
+const Qs = require('querystring');
+const service = require('../lib/service');
+const Url = require('url');
+const _ = require('lodash');
+const vinlirc = require('../lib/vinlirc');
+
+const authService = service('auth');
+
+const cookieRegex = /(?:[^\x00-\x20\(\)<>@\,;\:\\"\/\[\]\?\=\{\}\x7F]+)\s*=\s*(?:([^\x00-\x20\"\,\;\\\x7F]*))/;
+
+const extractCookie = function(headers) {
+  return headers['set-cookie'][0].match(cookieRegex)[0];
+};
+
+prompt.message = 'signup'.cyan;
+prompt.delimiter = ':'.cyan;
+prompt.start();
+
+program
+  .description('Authorizes a MyVinli account with your app\'s client')
+  .option('--email [email]')
+  .option('--password [password]')
+  .option('--app [app id]')
+  .option('--secret [app secret]')
+  .parse(process.argv);
+
+const authorize = function(email, password, clientId, redirectUri) {
+  return B.resolve()
+    .then(() => {
+      console.log(`\nSigning in to ${email} MyVinli account...`);
+
+      return yarp({
+        method: 'POST',
+        url: `${authService}/api/v1/sessions`,
+        json: {
+          session: {
+            email: email,
+            password: password
+          }
+        }
+      }, true);
+    }).then((resp) => {
+      if (resp.statusCode === 400 || resp.statusCode === 401) {
+        throw new Error('Invalid login credentials');
+      }
+      const cookie = extractCookie(resp.headers);
+
+      console.log('Authenticated user.  Initiation OAuth flow for application...');
+
+      return B.all([
+        cookie,
+        yarp({
+          followRedirect: false,
+          url: `${authService}/oauth/authorization/new`,
+          qs: {
+            client_id: clientId,
+            redirect_uri: redirectUri,
+            response_type: 'token'
+          },
+          headers: {
+            cookie: cookie
+          }
+        }, true)
+      ]);
+    }).spread((cookie, resp) => {
+      if (resp.statusCode === 302) {
+        console.log('Application previously authorized.');
+        return resp;
+      }
+
+      if (resp.statusCode >= 400) {
+        throw new Error('Invalid client information.');
+      }
+
+      console.log('Authorizing application...');
+
+      if (resp.data) {
+        const $ = Cheerio.load(resp.data);
+        const transactionId = $('input[type=hidden][name=transaction_id]').val();
+
+        return yarp({
+          method: 'POST',
+          url: `${authService}/oauth/authorization`,
+          json: {
+            transaction_id: transactionId
+          },
+          headers: {
+            cookie: [
+              cookie, // user session cookie
+              extractCookie(resp.headers) // oauth session cookie
+            ].join('; ')
+          }
+        }, true);
+      }
+
+      return resp;
+    }).then((resp) => {
+      const params = Qs.parse(Url.parse(resp.headers.location).hash.substr(1));
+      console.log('Application authorized successfully');
+      console.log('\nOAuth Bearer token ==> ', params.access_token);
+      console.log('\nTo use Bearer token:');
+      console.log(`\ncurl -H "Authorization: Bearer ${params.access_token}" https://platform.vin.li/api/v1/devices\n`);
+    }).catch((e) => {
+      console.log(e.stack);
+    });
+};
+
+B.resolve(vinlirc.read(program))
+  .then((options) =>
+    yarp({
+      url: `${authService}/api/v1/clients`,
+      auth: {
+        user: options.app,
+        pass: options.secret
+      }
+    })
+  )
+  .then((resp) => {
+    const client = _.find(resp.clients, { type: 'web' });
+
+    if (!client) {
+      console.log('App does not have a "web" client.');
+      process.exit(1);
+    }
+
+    return B.props({
+      client: client,
+      response: prompt.getAsync([
+        {
+          name: 'email',
+          default: program.email
+        },
+        {
+          name: 'password',
+          default: program.password,
+          hidden: true
+        }
+      ])
+    });
+  })
+  .then((clump) => {
+    return authorize(
+      clump.response.email,
+      clump.response.password,
+      clump.client.id,
+      clump.client.data.redirectUri);
+  })
+  .catch(require('../lib/error_handler'))
+  .done();

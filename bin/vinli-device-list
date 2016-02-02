@@ -1,0 +1,53 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const program = require('commander');
+const yarp = require('yarp');
+const _ = require('lodash');
+const Output = require('../lib/output');
+const service = require('../lib/service');
+const vinlirc = require('../lib/vinlirc');
+
+const platformService = service('platform');
+
+program
+  .description('Get a list of devices available to an App')
+  .option('--app [app id]')
+  .option('--secret [app secret]')
+  .option('--limit [number]')
+  .option('--offset [number]')
+  .option('-o, --output [number]')
+  .parse(process.argv);
+
+B.resolve(vinlirc.read(program))
+  .then((options) =>
+    yarp({
+      url: `${platformService}/api/v1/devices`,
+      qs: {
+        limit: _.get(program, 'limit', 10),
+        offset: _.get(program, 'offset', 0)
+      },
+      auth: {
+        user: options.app,
+        pass: options.secret
+      }
+    })
+  )
+  .then((resp) => {
+    Output.printList(program.output, resp, 'devices', [{
+      title: 'ID',
+      key: 'id'
+    }, {
+      title: 'Name',
+      key: 'name'
+    }, {
+      title: 'Created',
+      key: 'createdAt',
+      format: (date) => new Date(date).toString()
+    }]);
+  })
+  .catch((err) => {
+    throw new Error(err);
+  })
+  .done();

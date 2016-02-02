@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+'use strict';
+
+const colors = require('colors');  // eslint-disable-line no-unused-vars
+const dummy = require('../lib/dummy');
+const program = require('commander');
+const vinlirc = require('../lib/vinlirc');
+
+program
+  .description('Save device info to .vinlirc for easy access by other commands')
+  .option('--dummy [dummy name or id]')
+  .option('-g, --global', 'save to .vinlirc in your home directory instead')
+  .parse(process.argv);
+
+if (!program.dummy) {
+  program.help();
+}
+
+dummy.find(vinlirc.read(program))
+  .then((d) =>
+    vinlirc
+      .save(d, program.global)
+      .tap(() => console.log(JSON.stringify(d, null, 2)))
+  )
+  .then((file) => console.log(`Saved to ${file}`.green));

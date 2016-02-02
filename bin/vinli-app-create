@@ -1,0 +1,115 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const colors = require('colors');  // eslint-disable-line no-unused-vars
+const devPortal = require('../lib/service')('dev');
+const Output = require('../lib/output');
+const program = require('commander');
+const prompt = B.promisifyAll(require('prompt'));
+const sessionYarp = require('../lib/session_yarp').dev;
+
+program
+  .description('Create a new application on a developer account')
+  .option('--app-name [str]', 'REQUIRED')
+  .option('--desc [str]', 'REQUIRED Description')
+  .option('--status [dev|prod]', 'OPTIONAL [dev]', /^(dev|prod)$/i, 'dev')
+  .option('--type [consumer|admin|enterprise]', 'OPTIONAL', /^(consumer|admin|enterprise)$/i)
+  .option('--email [email]', 'email address for your developer (dev.vin.li) account')
+  .option('--password [password]', 'not saved')
+  .option('-o, --output [format]', 'Output format, <table|json|yaml|text>, default: table', /^(json|table|text|yaml)$/i, 'table')
+  .parse(process.argv);
+
+prompt.message = 'Create App'.cyan;
+prompt.delimiter = ':'.cyan;
+prompt.start();
+
+const createApp = (create) => {
+  const data = {
+    'app[description]': create.description,
+    'app[name]': create.appName
+  };
+  if (create.status) {
+    data['app[status]'] = create.status;
+  }
+  if (create.type) {
+    data['app[type]'] = create.type;
+  }
+
+  const options = {
+    method: 'POST',
+    url: `${devPortal}/api/v1/apps`,
+    formData: data
+  };
+  return sessionYarp(create.email, create.password, options)
+    .then((resp) =>
+      Output.printList(program.output, { apps: [ resp.app ] }, 'apps', [{
+        title: 'ID',
+        key: 'id'
+      }, {
+        title: 'Name',
+        key: 'name'
+      }, {
+        title: 'Description',
+        key: 'description'
+      }, {
+        title: 'Created',
+        key: 'createdAt',
+        format: (date) => new Date(date).toString()
+      }])
+    );
+};
+
+B.resolve()
+  .then(() => {
+    return B.props({
+      response: prompt.getAsync([
+        {
+          name: 'email',
+          default: program.email,
+          required: true,
+          description: 'Developer email account'
+        },
+        {
+          name: 'password',
+          default: program.password,
+          hidden: true,
+          required: true,
+          description: 'Developer account password (not saved)'
+        },
+        {
+          name: 'appName',
+          default: program.appName,
+          required: true
+        },
+        {
+          name: 'description',
+          default: program.desc,
+          required: true
+        },
+        {
+          name: 'status',
+          default: program.status,
+          pattern: /^(dev|prod)$/i,
+          message: 'dev|prod'
+        },
+        {
+          name: 'type',
+          default: program.type,
+          pattern: /^(consumer|admin|enterprise)$/i,
+          message: 'consumer|admin|enterprise or <blank>'
+        }
+      ])
+    });
+  })
+  .then((clump) => {
+    console.log(`\nSigning in to ${clump.response.email} developer account...`);
+    return createApp(clump.response);
+  })
+  .catch((err) => {
+    if (err.message === 'canceled') {
+      return console.log('\nYou can always create apps at https://dev.vin.li'.cyan);
+    }
+    return console.log(`\t${err.message}`.red);
+  })
+  .done();

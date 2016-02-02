@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const program = require('commander');
+const yarp = require('yarp');
+const errorHandler = require('../lib/error_handler');
+const Output = require('../lib/output');
+const service = require('../lib/service');
+const vinlirc = require('../lib/vinlirc');
+
+const dummyService = service('dummy');
+
+program
+  .description('Create a new dummy device')
+  .option('--app [app id]')
+  .option('--secret [app secret]')
+  .option('--name [device name]')
+  .option('-o, --output <table|text|csv|json|yaml>')
+  .parse(process.argv);
+
+B.resolve(vinlirc.read(program))
+  .tap((options) => {
+    if (!(options.app && options.secret)) {
+      throw new Error('Must specify --app & --secret parameters or save to vinlirc with `vinli-cli app set-current`');
+    }
+    console.log('Creating dummy (may take a minute)...');
+  })
+  .then((options) =>
+    yarp({
+      method: 'POST',
+      url: `${dummyService}/api/v1/dummies`,
+      json: {
+        dummy: {
+          name: program.name
+        }
+      },
+      auth: {
+        user: options.app,
+        pass: options.secret
+      }
+    })
+  )
+  .then((resp) => {
+    Output.printItem(program.output, resp.dummy, [{
+      title: 'ID',
+      key: 'id'
+    }, {
+      title: 'Name',
+      key: 'name'
+    }, {
+      title: 'Device ID',
+      key: 'deviceId'
+    }, {
+      title: 'Case ID',
+      key: 'caseId'
+    }]);
+  })
+  .catch(errorHandler)
+  .done();

@@ -1,0 +1,900 @@
+{
+  "troubleCodesAndTestInfo": {
+    "name": "Trouble Codes",
+    "description": "Trouble codes and on board test information including Check Engine Light status, type of motor, number of DTC codes, and the status of several tests (Fuel System, Components, Heated Catalyst, Evap System, etc.)",
+    "dataType": "string"
+  },
+  "fuelSystemStatus": {
+    "name": "Fuel System Status",
+    "description": "Fuel system status",
+    "dataType": "string"
+  },
+  "calculatedLoadValue": {
+    "name": "Calculated Load Value",
+    "description": "Calculated as a ratio of current airflow to the peak airflow normalized by current barometric pressure and ambient temperature",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "coolantTemp": {
+    "name": "Coolant Temp",
+    "description": "Displays engine collant temperature derived from engine coolant temperature sensor or cylinder head temperature sensor",
+    "dataType": "decimal",
+    "units": "degC"
+  },
+  "shortTermFuelTrimBank1": {
+    "name": "Short Term Fuel Trim 1",
+    "description": "The Short Term Fuel Trim Bank 1 indicates the correction being used by the closed loop fuel algorithm",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "longTermFuelTrimBank1": {
+    "name": "Long Term Fuel Trim 1",
+    "description": "The Long term fuel trim Bank 1 indicate the correction being utilized by the fuel control algorithm",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "shortTermFuelTrimBank2": {
+    "name": "Short Term Fuel Trim 2",
+    "description": "The Short term fuel trim Bank 2 indicates the correction being utilized by the closed loop fuel algorithm",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "longTermFuelTrimBank2": {
+    "name": "Long Term Fuel Trim 2",
+    "description": "The Long term fuel trim Bank 2 indicates the correction being utilized by the closed loop fuel algorithm",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "fuelPressure": {
+    "name": "Fuel Pressure",
+    "description": "Fuel pressure",
+    "dataType": "decimal",
+    "units": "kPa (guage)"
+  },
+  "intakeManifoldPressure": {
+    "description": "The intake manifold supplies the fuel/air mixture to the cylinders. Intake Manifold Pressure indicates the pressure derived from the Manifold Pressure sensor",
+    "name": "Manifold Pressure",
+    "dataType": "decimal",
+    "units": "kPa (absolute)"
+  },
+  "rpm": {
+    "name": "RPM",
+    "description": "Engine RPM. Revolutions Per Minute",
+    "dataType": "decimal",
+    "units": "rpm"
+  },
+  "vehicleSpeed": {
+    "name": "Speed",
+    "description": "Vehicle speed",
+    "dataType": "decimal",
+    "units": "km/h"
+  },
+  "timingAdvance": {
+    "name": "Timing Advance",
+    "description": "Timing advance",
+    "dataType": "decimal",
+    "units": "deg"
+  },
+  "intakeAirTemperature": {
+    "name": "Intake Air Temp",
+    "description": "Intake air temperature",
+    "dataType": "decimal",
+    "units": "degC"
+  },
+  "massAirFlow": {
+    "name": "Mass Airflow",
+    "description": "Mass airflow is displayed as a rate measured by the Mass Air Flow Sensor",
+    "dataType": "decimal",
+    "units": "g/s"
+  },
+  "absoluteThrottleSensorPosition": {
+    "name": "Throttle Position",
+    "description": "The Absolute Throttle Sensor is a sensor used to monitor the throttle position of the car. The position is scaled from 0 to 100%",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "secondaryAirStatus": {
+    "name": "2nd Air Status",
+    "description": "Secondary air injection is a process wherein fresh air is injected into the exhaust stream to allow for a fuller combustion. Returns a status of UPS, DNS, or OFF",
+    "dataType": "string"
+  },
+  "oxygenSensorLocations": {
+    "name": "O2 Sensor Locations",
+    "description": "Oxygen sensor locations bank/sensor",
+    "dataType": "string"
+  },
+  "oxygenSensorVoltage1a": {
+    "name": "O2 Sensor Voltage 1a",
+    "description": "Bank 1 - sensor 1 (wide range O2S): Oxygen sensor voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "shortTermFuelTrim1a": {
+    "name": "Short Term Fuel Trim 1a",
+    "description": "Bank 1 - sensor 1 (wide range O2S): Short term fuel trim",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "oxygenSensorVoltage1b": {
+    "name": "O2 Sensor Voltage 1b",
+    "description": "Bank 1 - sensor 2 (wide range O2S): Oxygen sensor voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "shortTermFuelTrim1b": {
+    "name": "Short Term Fuel Trim 1b",
+    "description": "Bank 1 - sensor 2 (wide range 02S): Short term fuel trim",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "oxygenSensorVoltage1c": {
+    "name": "O2 Sensor Voltage 1c",
+    "description": "Bank 1 - sensor 3 (wide range O2S): Oxygen sensor voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "shortTermFuelTrim1c": {
+    "name": "Short Term Fuel Trim 1c",
+    "description": "Bank 1 - sensor 3 (wide range 02S): Short term fuel trim",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "oxygenSensorVoltage1d": {
+    "name": "O2 Sensor Voltage 1d",
+    "description": "Bank 1 - sensor 4 (wide range O2S): Oxygen sensor voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "shortTermFuelTrim1d": {
+    "name": "Short Term Fuel Trim 1d",
+    "description": "Bank 1 - sensor 4 (wide range 02S): Short term fuel trim",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "oxygenSensorVoltage2a": {
+    "name": "O2 Sensor Voltage 2a",
+    "description": "Bank 2 - sensor 1 (wide range O2S): Oxygen sensor voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "shortTermFuelTrim2a": {
+    "name": "Short Term Fuel Trim 2a",
+    "description": "Bank 2 - sensor 1 (wide range 02S): Short term fuel trim",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "oxygenSensorVoltage2b": {
+    "name": "O2 Sensor Voltage 2b",
+    "description": "Bank 2 - sensor 2 (wide range O2S): Oxygen sensor voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "shortTermFuelTrim2b": {
+    "name": "Short Term Fuel Trim 2b",
+    "description": "Bank 2 - sensor 2 (wide range 02S): Short term fuel trim",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "oxygenSensorVoltage2c": {
+    "name": "O2 Sensor Voltage 2c",
+    "description": "Bank 2 - sensor 3 (wide range O2S): Oxygen sensor voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "shortTermFuelTrim2c": {
+    "name": "Short Term Fuel Trim 2c",
+    "description": "Bank 2 - sensor 3 (wide range 02S): Short term fuel trim",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "oxygenSensorVoltage2d": {
+    "name": "O2 Sensor Voltage 2d",
+    "description": "Bank 2 - sensor 4 (wide range O2S): Oxygen sensor voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "shortTermFuelTrim2d": {
+    "name": "Short Term Fuel Trim 2d",
+    "description": "Bank 2 - sensor 4 (wide range 02S): Short term fuel trim",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "designOBDRequirements": {
+    "name": "Design OBD Reqs",
+    "description": "Design OBD requirements to which the vehicle is designed",
+    "dataType": "string"
+  },
+  "alternateOxygenSensorLocations": {
+    "name": "Alternate O2 Sensors",
+    "description": "Alternate Oxy sensor locations",
+    "dataType": "string"
+  },
+  "auxilliaryInputStatus": {
+    "name": "Aux Input Status",
+    "description": "Auxilliary input status",
+    "dataType": "string"
+  },
+  "runTimeSinceEngineStart": {
+    "name": "Run Time",
+    "description": "Run time since engine start",
+    "dataType": "decimal",
+    "units": "s"
+  },
+  "supportedPIDs2": {
+    "name": "Supported PIDs 2",
+    "description": "Determine PIDs supported (range 21h to 40h )",
+    "dataType": "string"
+  },
+  "distanceTraveledMILActivated": {
+    "name": "MIL Distance",
+    "description": "Distance traveled while malfunction indicator lamp is on",
+    "dataType": "decimal",
+    "units": "km"
+  },
+  "fuelRailPressureRelManifold": {
+    "name": "Rel. Fuel Rail Pressure",
+    "description": "Fuel rail pressure relative to manifold vacuum",
+    "dataType": "decimal",
+    "units": "kPa"
+  },
+  "fuelRailPressure": {
+    "name": "Fuel Rail Pressure",
+    "description": "Fuel rail pressure",
+    "dataType": "decimal",
+    "units": "kPa (gauge)"
+  },
+  "equivalenceRatio1a": {
+    "name": "Equivalence Ratio 1a",
+    "description": "Bank 1 - sensor 1 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "voltage1a": {
+    "name": "Voltage 1a",
+    "description": "Bank 1 - sensor 1 (wide range 02S): Voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "equivalenceRatio1b": {
+    "name": "Equivalence Ratio 1b",
+    "description": "Bank 1 - sensor 2 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "voltage1b": {
+    "name": "Voltage 1b",
+    "description": "Bank 1 - sensor 2 (wide range 02S): Voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "equivalenceRatio1c": {
+    "name": "Equivalence Ratio 1c",
+    "description": "Bank 1 - sensor 3 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "voltage1c": {
+    "name": "Voltage 1c",
+    "description": "Bank 1 - sensor 3 (wide range 02S): Voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "equivalenceRatio1d": {
+    "name": "Equivalence Ratio 1d",
+    "description": "Bank 1 - sensor 4 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "voltage1d": {
+    "name": "Voltage 1d",
+    "description": "Bank 1 - sensor 4 (wide range 02S): Voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "equivalenceRatio2a": {
+    "name": "Equivalence Ratio 2a",
+    "description": "Bank 2 - sensor 1 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "voltage2a": {
+    "name": "Voltage 2a",
+    "description": "Bank 2 - sensor 1 (wide range 02S): Voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "equivalenceRatio2b": {
+    "name": "Equivalence Ratio 2b",
+    "description": "Bank 2 - sensor 2 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "voltage2b": {
+    "name": "Voltage 2b",
+    "description": "Bank 2 - sensor 2 (wide range 02S): Voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "equivalenceRatio2c": {
+    "name": "Equivalence Ratio 2c",
+    "description": "Bank 2 - sensor 3 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "voltage2c": {
+    "name": "Voltage 2c",
+    "description": "Bank 2 - sensor 3 (wide range 02S): Voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "equivalenceRatio2d": {
+    "name": "Equivalence Ratio 2d",
+    "description": "Bank 2 - sensor 4 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "voltage2d": {
+    "name": "Voltage 2d",
+    "description": "Bank 2 - sensor 4 (wide range 02S): Voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "commandedExhaustGasRecirculation": {
+    "name": "Commanded EGR",
+    "description": "recirculation exhaust gas recirculation. Is expressed as a percent",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "exhaustGasRecirculationError": {
+    "name": "EGR error",
+    "description": "Exhaust gas recirculation error",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "commandedEvaporativePurge": {
+    "name": "Evaporative Purge",
+    "description": "Commanded evaporative purge is expressed as a percent and displays 0% when no purge is commanded and 100% at the maximum commanded purge position/flow.",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "fuelLevelInput": {
+    "name": "Fuel Level Input",
+    "description": "Fuel level input",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "numberOfWarmupsSinceDTCsCleared": {
+    "name": "Warmups Since DTCs Cleared",
+    "description": "Number of warm-ups since DTCs cleared. A warm-up is defined as the coolant temperature rising by at least 22°C and the engine temperature reacheing at a minimum 70°C",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "distanceSinceDTCsCleared": {
+    "name": "Distance Since DTCs Cleared",
+    "description": "Distance traveled since DTCs cleared",
+    "dataType": "decimal",
+    "units": "km"
+  },
+  "evapSystemVaporPressure1": {
+    "name": "Evap. Vapor Pressure 1",
+    "description": "Evaporative system pressure is obtained from a sensor located in evaporative system vapor line or a sensor located in the fuel tank",
+    "dataType": "decimal",
+    "units": "Pa"
+  },
+  "barometricPressure": {
+    "name": "Barometric Pressure",
+    "description": "Barometric pressure",
+    "dataType": "decimal",
+    "units": "kPa (abs)"
+  },
+  "equivalenceRatio1aa": {
+    "name": "Equivalence Ratio 1aa",
+    "description": "Bank 1 - sensor 1 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "current1a": {
+    "name": "Current 1a",
+    "description": "Bank 1 - sensor 1 (wide range 02S): Current",
+    "dataType": "decimal",
+    "units": "mA"
+  },
+  "equivalenceRatio1bb": {
+    "name": "Equivalence Ratio 1bb",
+    "description": "Bank 1 - sensor 2 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "current1b": {
+    "name": "Current 1b",
+    "description": "Bank 1 - sensor 2 (wide range 02S): Current",
+    "dataType": "decimal",
+    "units": "mA"
+  },
+  "equivalenceRatio1cc": {
+    "name": "Equivalence Ratio 1cc",
+    "description": "Bank 1 - sensor 3 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "current1c": {
+    "name": "Current 1c",
+    "description": "Bank 1 - sensor 3 (wide range 02S): Current",
+    "dataType": "decimal",
+    "units": "mA"
+  },
+  "equivalenceRatio1dd": {
+    "name": "Equivalence Ratio 1dd",
+    "description": "Bank 1 - sensor 4 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "current1d": {
+    "name": "Current 1d",
+    "description": "Bank 1 - sensor 4 (wide range 02S): Current",
+    "dataType": "decimal",
+    "units": "mA"
+  },
+  "equivalenceRatio2aa": {
+    "name": "Equivalence Ratio 2aa",
+    "description": "Bank 2 - sensor 1 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "current2a": {
+    "name": "Current 2a",
+    "description": "Bank 2 - sensor 1 (wide range 02S): Current",
+    "dataType": "decimal",
+    "units": "mA"
+  },
+  "equivalenceRatio2bb": {
+    "name": "Equivalence Ratio 2bb",
+    "description": "Bank 2 - sensor 2 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "current2b": {
+    "name": "Current 2b",
+    "description": "Bank 2 - sensor 2 (wide range 02S): Current",
+    "dataType": "decimal",
+    "units": "mA"
+  },
+  "equivalenceRatio2cc": {
+    "name": "Equivalence Ratio 2cc",
+    "description": "Bank 2 - sensor 3 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "current2c": {
+    "name": "Current 2c",
+    "description": "Bank 2 - sensor 3 (wide range 02S): Current",
+    "dataType": "decimal",
+    "units": "mA"
+  },
+  "equivalenceRatio2dd": {
+    "name": "Equivalence Ratio 2dd",
+    "description": "Bank 2 - sensor 4 (wide range O2S): Equivalence Ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "current2d": {
+    "name": "Current 2d",
+    "description": "Bank 2 - sensor 4 (wide range 02S): Current",
+    "dataType": "decimal",
+    "units": "mA"
+  },
+  "catalystTemp1a": {
+    "name": "Catalyst Temp 1a",
+    "description": "Catalyst Temperature bank 1, sensor 1",
+    "dataType": "decimal",
+    "units": "degC"
+  },
+  "catalystTemp2a": {
+    "name": "Catalyst Temp 2a",
+    "description": "Catalyst Temperature bank 2, sensor 1",
+    "dataType": "decimal",
+    "units": "degC"
+  },
+  "catalystTemp1b": {
+    "name": "Catalyst Temp 1b",
+    "description": "Catalyst Temperature bank 1, sensor 2",
+    "dataType": "decimal",
+    "units": "degC"
+  },
+  "catalystTemp2b": {
+    "name": "Catalyst Temp 2b",
+    "description": "Catalyst Temperature bank 2, sensor 2",
+    "dataType": "decimal",
+    "units": "degC"
+  },
+  "monitorStatusThisDrivingCycle": {
+    "name": "Monitor Status",
+    "description": "Monitor status this driving cycle.",
+    "dataType": "string"
+  },
+  "controlModuleVoltage": {
+    "name": "Control Mod. Voltage",
+    "description": "Controls the module voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "absoluteLoadValue": {
+    "name": "Abs. Load Value",
+    "description": "Absolute load value is calculated as ratio of air mass to intake stroke normalized by the cylander displacement in liters",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "fuelAirCommandedEquivalenceRatio": {
+    "name": "Air/Fuel Ratio",
+    "description": "Fuel/air commanded equivalence ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "relativeThrottlePosition": {
+    "name": "Rel. Throttle Position",
+    "description": "Relative throttle position",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "ambientAirTemperature": {
+    "name": "Ambient Air Temp",
+    "description": "Ambient air temperature",
+    "dataType": "decimal",
+    "units": "degC"
+  },
+  "absoluteThrottlePositionb": {
+    "name": "Abs. Throttle Position B",
+    "description": "Absolute throttle position B",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "absoluteThrottlePositionc": {
+    "name": "Abs. Throttle Position C",
+    "description": "Absolute throttle position C",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "acceleratorPedalPositiond": {
+    "name": "Accelerator Position D",
+    "description": "Accelerator pedal position D",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "acceleratorPedalPositione": {
+    "name": "Accelerator Position E",
+    "description": "Accelerator pedal position E",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "acceleratorPedalPositionf": {
+    "name": "Accelerator Position F",
+    "description": "Accelerator pedal position F",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "commandedThrottleActuatorControl": {
+    "name": "Throttle Actuator Position",
+    "description": "Commanded throttle actuator control",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "engineRuntimeWhileMILOn": {
+    "name": "Runtime With MIL On",
+    "description": "Engine run time while malfunction indicator light is activated",
+    "dataType": "decimal",
+    "units": "min"
+  },
+  "engineRuntimeSinceDTCsCleared": {
+    "name": "Runtime Since DTCs Cleared",
+    "description": "Engine runtime since DTCs cleared",
+    "dataType": "decimal",
+    "units": "min"
+  },
+  "externalEquipmentEquivalenceRatio1": {
+    "name": "External Equiv. Ratio 1",
+    "description": "External test equipment configuration information #1: equivalence ratio",
+    "dataType": "decimal",
+    "units": ""
+  },
+  "externalO2Voltage1": {
+    "name": "External O2 Voltage 1",
+    "description": "External test equipment configuration information #1: oxygen sensor voltage",
+    "dataType": "decimal",
+    "units": "V"
+  },
+  "externalO2Current1": {
+    "name": "External O2 Current",
+    "description": "External test equipment configuration information #1: oxygen sensor current",
+    "dataType": "decimal",
+    "units": "mA"
+  },
+  "externalAbsIntakeManifoldPressure1": {
+    "name": "External Manifold Pressure 1",
+    "description": "External test equipment configuration information #1: intake manifold abs pressure",
+    "dataType": "decimal",
+    "units": "kPa"
+  },
+  "extTestEquipmentConfig2": {
+    "name": "External Config 2",
+    "description": "External test equipment configuration information #2",
+    "dataType": "string"
+  },
+  "fuelType": {
+    "name": "Fuel Type",
+    "description": "Type of fuel currently being utilized by the vehicle",
+    "dataType": "string"
+  },
+  "ethanolFuelPercentage": {
+    "name": "Ethanol Fuel %",
+    "description": "Ethanol fuel percentage",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "absEvapSystemVaporPressure": {
+    "name": "Abs. Evap. Vapor Pressure",
+    "description": "Absolute evaporative system vapor pressure",
+    "dataType": "decimal",
+    "units": "kPa"
+  },
+  "evapSystemVaporPressure2": {
+    "name": "Evap. Vapor Pressure 2",
+    "description": "Evap system vapor pressure 2",
+    "dataType": "decimal",
+    "units": "Pa"
+  },
+  "2ndShortTermFuelTrim1": {
+    "name": "2nd Short Term Fuel Trim 1",
+    "description": "Short term secondary O2 sensor fuel trim - bank 1",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "2ndShortTermFuelTrim3": {
+    "name": "2nd Short Term Fuel Trim 3",
+    "description": "Short term secondary O2 sensor fuel trim - bank 3",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "2ndLongTermFuelTrim1": {
+    "name": "2nd Long Term Fuel Trim 1",
+    "description": "Long term secondary O2 sensor fuel trim - bank 1",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "2ndLongTermFuelTrim3": {
+    "name": "2nd Long Term Fuel Trim 3",
+    "description": "Long term secondary O2 sensor fuel trim - bank 3",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "2ndShortTermFuelTrim2": {
+    "name": "2nd Short Term Fuel Trim 2",
+    "description": "Short term secondary O2 sensor fuel trim - bank 2",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "2ndShortTermFuelTrim4": {
+    "name": "2nd Short Term Fuel Trim 4",
+    "description": "Short term secondary O2 sensor fuel trim - bank 4",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "2ndLongTermFuelTrim2": {
+    "name": "2nd Long Term Fuel Trim 2",
+    "description": "Long term secondary O2 sensor fuel trim - bank 2",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "2ndLongTermFuelTrim4": {
+    "name": "2nd Long Term Fuel Trim 4",
+    "description": "Long term secondary O2 sensor fuel trim - bank 4",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "absFuelRailPressure": {
+    "name": "Abs Fuel Rail Pressure",
+    "description": "Pressure in Fuel rail that delivers fuel to fuel injectors",
+    "dataType": "decimal",
+    "units": "kPa"
+  },
+  "relativeAcceleratorPosition": {
+    "name": "Rel. Accelerator Position",
+    "description": "Relative accelerator pedal position",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "hybridBatteryLife": {
+    "name": "Hybrid Battery Life",
+    "description": "Hybrid battery pack remaining life in percent",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "engineOilTemperature": {
+    "name": "Engine Oil Temp",
+    "description": "Engine oil temperature",
+    "dataType": "decimal",
+    "units": "degC"
+  },
+  "fuelInjectionTiming": {
+    "name": "Fuel Injection Timing",
+    "description": "Fuel injection timing displays the start of the of the main fuel injection",
+    "dataType": "decimal",
+    "units": "deg"
+  },
+  "engineFuelRate": {
+    "name": "Engine Fuel Rate",
+    "description": "Engine Fuel Rate indicates the amount of fuel consumed by the engine per unit of time in liters per hour",
+    "dataType": "decimal",
+    "units": "L/h"
+  },
+  "emissionReqs": {
+    "name": "Emission Reqs",
+    "description": "Emission requirements to which vehicle is designed",
+    "dataType": "string"
+  },
+  "driversDemandEnginePercentTorque": {
+    "name": "Demand Engine % Torque",
+    "description": "Driver's demand engine - percent torque",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "actualEnginePercentTorque": {
+    "name": "Engine % Torque",
+    "description": "Actual engine - percent torque",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "engineReferenceTorque": {
+    "name": "Engine Reference Torque",
+    "description": "The Engine reference torque acts as a reference value for all defined engine torque parameters",
+    "dataType": "decimal",
+    "units": "Nm"
+  },
+  "enginePercentTorqueData": {
+    "name": "Engine % Torque Data",
+    "description": "Engine percent torque data ",
+    "dataType": "decimal",
+    "units": "%"
+  },
+  "auxIO": {
+    "name": "Auxilliary I/O",
+    "description": "Auxiliary inputs / outputs"
+  },
+  "mafSensor": {
+    "name": "Mass Air Flow Sensor",
+    "description": "Mass air flow sensor"
+  },
+  "engineCoolantTemp": {
+    "name": "The Engine Coolant Temperature is derived from the engine coolant temperature sensor",
+    "description": "Engine coolant temperature"
+  },
+  "intakeAirTempSensor": {
+    "name": "Intake Air Temp Sensor",
+    "description": "Intake air temperature sensor reading"
+  },
+  "commandedEGRAndError": {
+    "name": "Commanded EGR/Error",
+    "description": "EGR = Exhaust Gas Recirculation"
+  },
+  "intakeAirFlow": {
+    "name": "Intake Air Flow",
+    "description": "Commanded diesel intake air flow control and relative intake air flow position"
+  },
+  "egrTemp": {
+    "name": "EGR Temp",
+    "description": "Exhaust gas recirculation temperature"
+  },
+  "throttleActuatorControlPosition": {
+    "name": "Throttle Control/Position",
+    "description": "Commanded throttle actuator control and relative throttle position"
+  },
+  "fuelPressureControlSystem": {
+    "name": "Fuel Pressure Control",
+    "description": "Fuel pressure control system"
+  },
+  "injectionPressureControlSystem": {
+    "name": "Injection Pressure Control",
+    "description": "Injection pressure control system"
+  },
+  "turbochargerCompressorInletPressure": {
+    "name": "Turbocharger Pressure",
+    "description": "Turbocharger compressor inlet pressure"
+  },
+  "boostPressureControl": {
+    "name": "Boost Pressure Control",
+    "description": "Boost pressure control"
+  },
+  "vgtControl": {
+    "name": "VGT Control",
+    "description": "Variable geometry turbo (VGT) control"
+  },
+  "wastegateControl": {
+    "name": "Wastegate Control",
+    "description": "The Wastegate is a valve that diverts exhaust fases away from the turbine wheel. Wastegate control displays the wastegate position as a percent."
+  },
+  "exhaustPressure": {
+    "name": "Exhaust Pressure",
+    "description": "Displays Exhaust Pressure in kPa"
+  },
+  "turbochargerRPM": {
+    "name": "Turbocharger RPM",
+    "description": "Turbocharger Revolutions Per Minute"
+  },
+  "tcTempA": {
+    "name": "Turbocharger A Temp",
+    "description": "Turbocharger A temperature"
+  },
+  "tcTempC": {
+    "name": "Turbocharger B Temp",
+    "description": "Turbocharger B temperature"
+  },
+  "cact": {
+    "name": "Charge Air Cooler Temp",
+    "description": "Charge air cooler temperature (CACT)"
+  },
+  "egtBank1": {
+    "name": "Exhaust Gas Temp 1",
+    "description": "Exhaust gas temperature (EGT) bank 1",
+    "dataType": "string"
+  },
+  "egtBank2": {
+    "name": "Exhaust Gas Temp 2",
+    "description": "Exhaust gas temperature (EGT) bank 2",
+    "dataType": "string"
+  },
+  "dpf1": {
+    "name": "Diesel Filter 1",
+    "description": "Diesel particulate filter (DPF) bank 1"
+  },
+  "dpf2": {
+    "name": "Diesel Filter 2",
+    "description": "Diesel particulate filter (DPF) bank 2"
+  },
+  "dpfTemp": {
+    "name": "Diesel Filter Temp",
+    "description": "Diesel particulate filter (DPF) temperature"
+  },
+  "noxNTEControlAreaStatus": {
+    "name": "Nox NTE Status",
+    "description": "Nox NTE control area status"
+  },
+  "pmNTEControlAreaStatus": {
+    "name": "PM NTE Status",
+    "description": "PM NTE control area status"
+  },
+  "engineRuntime": {
+    "name": "Engine Runtime",
+    "description": "Engine run time in Hours Minutes Seconds"
+  },
+  "engineRuntime1": {
+    "name": "Engine Runtime 1",
+    "description": "Engine run time for AECD #1 - #5"
+  },
+  "engineRuntime2": {
+    "name": "Engine Runtime 2",
+    "description": "Engine run time for AECD #6 - #10"
+  },
+  "noxSensor": {
+    "name": "Nox Sensor",
+    "description": "Nitric Oxide sensor"
+  },
+  "manifoldTemp": {
+    "name": "Manifold Temp",
+    "description": "Manifold surface temperature"
+  },
+  "noxControlSystem": {
+    "name": "Nox Control System",
+    "description": "Nitric Oxide control system"
+  },
+  "pmSensor": {
+    "name": "Particulate Matter",
+    "description": "Particulate matter (PM) sensor"
+  },
+  "intakeManifoldAbsPressure": {
+    "name": "Abs Intake Manifold Pressure",
+    "description": "Intake manifold absolute pressure"
+  },
+  "reservediISOSAE": {
+    "name": "ISO/SAE Reserved",
+    "description": "ISO/SAE reserved"
+  }
+}

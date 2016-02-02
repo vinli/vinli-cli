@@ -1,0 +1,36 @@
+#!/usr/bin/env node
+'use strict';
+
+process.title = 'vinli';
+
+const _ = require('lodash');
+const colors = require('colors');  // eslint-disable-line no-unused-vars
+const config = require('../package.json');
+const fuzzy = require('../lib/fuzzy_find');
+const program = require('commander');
+
+program
+  .version(config.version)
+  .command('vinlirc', 'Show your current derived .vinlirc file')
+  .command('signup', 'Create a developer Account')
+  .command('device', 'Work with a given device')
+  .command('dummy', 'Work with virtual devices')
+  .command('oauth', 'OAuth utilities')
+  .command('auth', 'Auth utilities')
+  .command('app', 'Manage developer applications')
+  .command('dev', 'Manage Developer Portal account')
+  .parse(process.argv);
+
+const subCmd = _.head(program.args);
+const cmds = _.map(program.commands, '_name');
+
+if (!_.includes(cmds, subCmd)) {
+  console.log(`vinli:'` + `${subCmd}`.bold.red + `' is not a vinli command. See 'vinli --help'.\n`);  // eslint-disable-line
+  const possibles = fuzzy.command(cmds, subCmd);
+  if (possibles.length) {
+    console.log('Did you mean this?');
+    console.log(`\t${possibles.join('\n\t')}`.cyan);
+  } else {
+    program.help();
+  }
+}

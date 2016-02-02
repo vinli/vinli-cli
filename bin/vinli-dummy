@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+'use strict';
+
+process.title = 'vinli';
+
+const program = require('commander');
+const config = require('../package.json');
+
+program
+  .version(config.version)
+  .command('list', 'List dummy devices')
+  .command('create', 'Create a new dummy device')
+  .command('delete', 'Delete an existing dummy device')
+  .command('routes', 'List available dummy routes')
+  .command('start', 'Start a run')
+  .command('stop', 'Stop the current run')
+  .command('status', 'Retrieve dummy status')
+  .command('set-current', 'Save dummy info to .vinlirc to be used by other dummy commands')
+  .parse(process.argv);
