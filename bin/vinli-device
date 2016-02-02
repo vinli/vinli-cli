@@ -10,7 +10,10 @@ program
   .version(config.version)
   .command('list', 'List devices')
   .command('snapshots', 'Retrieve telemetry snapshots')
+  .command('messages', 'Retrieve telemetry messages')
   .command('locations', 'Retrieve device location history')
+  .command('events', 'Retrieve device event history')
   .command('vehicles', 'Retrieve device vehicle history')
+  .command('latest-vehicle', 'Retrieve latest vehicle associated with the device')
   .command('set-current', 'Save a device id to .vinlirc for easy retrieval by other commands')
   .parse(process.argv);

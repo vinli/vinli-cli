@@ -9,26 +9,28 @@ const Output = require('../lib/output');
 const service = require('../lib/service');
 const moment = require('moment');
 const vinlirc = require('../lib/vinlirc');
+const color = require('colors/safe');
 
-const platformService = service('platform');
+const eventService = service('event');
 
 program
-  .description('Get telemetry snapshots for a device')
+  .description('Get event history for a device')
   .option('--app [app id]')
   .option('--secret [app secret]')
   .option('--device [device id]')
+  .option('--type [event-type]')
   .option('--limit [number]')
-  .option('--offset [number]')
+  .option('--since [date]')
+  .option('--until [date]')
   .option('-o, --output [number]')
   .parse(process.argv);
 
 B.resolve(vinlirc.read(program))
   .then((options) =>
     yarp({
-      url: `${platformService}/api/v1/devices/${options.device}/vehicles`,
+      url: `${eventService}/api/v1/devices/${options.device}/events`,
       qs: {
-        limit: _.get(program, 'limit', 10),
-        offset: _.get(program, 'offset', 0)
+        limit: _.get(program, 'limit', 10)
       },
       auth: {
         user: options.app,
@@ -38,34 +40,24 @@ B.resolve(vinlirc.read(program))
   )
   .then((resp) => {
     const headers = [{
-      title: 'Last Startup',
-      key: 'lastStartup',
+      title: 'Timestamp',
+      key: 'timestamp',
       format: (date) => moment(date).format('YYYY-MM-DD HH:mm:ss ZZ')
     }, {
       title: 'ID',
       key: 'id'
     }, {
-      title: 'VIN',
-      key: 'vin'
+      title: 'Type',
+      key: 'eventType'
     }, {
-      title: 'Year',
-      key: 'year',
-      format: (v) => (v || '')
-    }, {
-      title: 'Make',
-      key: 'make',
-      format: (v) => (v || '')
-    }, {
-      title: 'Model',
-      key: 'model',
-      format: (v) => (v || '')
-    }, {
-      title: 'Trim',
-      key: 'trim',
-      format: (v) => (v || '')
+      title: 'Object',
+      key: 'object',
+      format: (obj) => {
+        return obj ? `${obj.id} ${color.cyan(obj.type)}` : '';
+      }
     }];
 
-    Output.printList(program.output, resp, 'vehicles', headers);
+    Output.printList(program.output, resp, 'events', headers);
   })
   .catch(require('../lib/error_handler'))
   .done();
