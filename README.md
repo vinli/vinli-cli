@@ -1,8 +1,9 @@
 Vinli CLI
 =========
+[![NPM](https://nodei.co/npm/vinli-cli.png?downloadRank=true)](https://nodei.co/npm/vinli-cli/)
 <!--
-Badges to be added in when published to npm:
-[![NPM](https://nodei.co/npm/vinli.png?downloads=true&&downloadRank=true&stars=true)](https://nodei.co/npm/vinli/) [![NPM](https://nodei.co/npm-dl/vinli.png?months=3&height=3)](https://nodei.co/npm/vinli/)
+Badge to be added in when there is some stats history:
+ [![NPM](https://nodei.co/npm-dl/vinli-cli.png?months=3&height=3)](https://nodei.co/npm/vinli-cli/)
 -->
 
 <!-- toc -->
