@@ -1,6 +1,6 @@
 Vinli CLI
 =========
-[![NPM](https://nodei.co/npm/vinli-cli.png?downloadRank=true)](https://nodei.co/npm/vinli-cli/)
+[![NPM](https://nodei.co/npm/vinli-cli.png?compact=true)](https://nodei.co/npm/vinli-cli/)
 <!--
 Badge to be added in when there is some stats history:
  [![NPM](https://nodei.co/npm-dl/vinli-cli.png?months=3&height=3)](https://nodei.co/npm/vinli-cli/)

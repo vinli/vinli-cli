@@ -2,6 +2,7 @@
   "name": "vinli-cli",
   "version": "1.0.1",
   "description": "Vinli Developers don't use web interfaces",
+  "preferGlobal": true,
   "main": "bin/vinli",
   "scripts": {
     "test": "NODE_ENV=test mocha --recursive -R spec",
