@@ -1,0 +1,66 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const program = require('commander');
+const yarp = require('yarp');
+const Output = require('../lib/output');
+const service = require('../lib/service');
+const moment = require('moment');
+const vinlirc = require('../lib/vinlirc');
+
+const platformService = service('platform');
+
+program
+  .description('Get the vehicle information for last vehicle a device was seen in')
+  .option('--app [app id]')
+  .option('--secret [app secret]')
+  .option('--device [device id]')
+  .option('-o, --output [number]')
+  .parse(process.argv);
+
+B.resolve(vinlirc.read(program))
+  .then((options) =>
+    yarp({
+      url: `${platformService}/api/v1/devices/${options.device}/vehicles/_latest`,
+      auth: {
+        user: options.app,
+        pass: options.secret
+      }
+    })
+  )
+  .then((resp) => {
+    if (resp.vehicle) {
+      Output.printItem(program.output, resp.vehicle, [{
+        title: 'Last Startup',
+        key: 'lastStartup',
+        format: (date) => moment(date).format('YYYY-MM-DD HH:mm:ss ZZ')
+      }, {
+        title: 'ID',
+        key: 'id'
+      }, {
+        title: 'VIN',
+        key: 'vin'
+      }, {
+        title: 'Year',
+        key: 'year',
+        format: (v) => (v || '')
+      }, {
+        title: 'Make',
+        key: 'make',
+        format: (v) => (v || '')
+      }, {
+        title: 'Model',
+        key: 'model',
+        format: (v) => (v || '')
+      }, {
+        title: 'Trim',
+        key: 'trim',
+        format: (v) => (v || '')
+      }]);
+    } else {
+      console.log('No latest vehicle');
+    }
+  })
+  .catch(require('../lib/error_handler'))
+  .done();

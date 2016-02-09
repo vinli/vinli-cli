@@ -10,25 +10,33 @@ const service = require('../lib/service');
 const moment = require('moment');
 const vinlirc = require('../lib/vinlirc');
 
-const platformService = service('platform');
+const telemetryService = service('telemetry');
+
+const oneLineData = function(data) {
+  const keys = _.sortBy(Object.keys(_.omit(data, [ 'location', 'accel' ])));
+  const tr = _.zipObject(keys, _.map(keys, (key) => {
+    return data[key];
+  }));
+  return JSON.stringify(tr);
+};
 
 program
-  .description('Get telemetry snapshots for a device')
+  .description('Get recent messages for a device')
   .option('--app [app id]')
   .option('--secret [app secret]')
   .option('--device [device id]')
   .option('--limit [number]')
-  .option('--offset [number]')
+  .option('--since [date]')
+  .option('--until [date]')
   .option('-o, --output [number]')
   .parse(process.argv);
 
 B.resolve(vinlirc.read(program))
   .then((options) =>
     yarp({
-      url: `${platformService}/api/v1/devices/${options.device}/vehicles`,
+      url: `${telemetryService}/api/v1/devices/${options.device}/messages`,
       qs: {
-        limit: _.get(program, 'limit', 10),
-        offset: _.get(program, 'offset', 0)
+        limit: _.get(program, 'limit', 10)
       },
       auth: {
         user: options.app,
@@ -38,34 +46,24 @@ B.resolve(vinlirc.read(program))
   )
   .then((resp) => {
     const headers = [{
-      title: 'Last Startup',
-      key: 'lastStartup',
+      title: 'Timestamp',
+      key: 'timestamp',
       format: (date) => moment(date).format('YYYY-MM-DD HH:mm:ss ZZ')
     }, {
-      title: 'ID',
-      key: 'id'
+      title: 'Lon',
+      key: 'data.location.coordinates[0]'
     }, {
-      title: 'VIN',
-      key: 'vin'
+      title: 'Lat',
+      key: 'data.location.coordinates[1]'
     }, {
-      title: 'Year',
-      key: 'year',
-      format: (v) => (v || '')
-    }, {
-      title: 'Make',
-      key: 'make',
-      format: (v) => (v || '')
-    }, {
-      title: 'Model',
-      key: 'model',
-      format: (v) => (v || '')
-    }, {
-      title: 'Trim',
-      key: 'trim',
-      format: (v) => (v || '')
+      title: 'Data',
+      key: 'data',
+      width: 90,
+      wrapWord: true,
+      format: oneLineData
     }];
 
-    Output.printList(program.output, resp, 'vehicles', headers);
+    Output.printList(program.output, resp, 'messages', headers);
   })
   .catch(require('../lib/error_handler'))
   .done();

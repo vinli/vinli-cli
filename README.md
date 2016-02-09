@@ -19,10 +19,13 @@ Badge to be added in when there is some stats history:
 - [Dev](#dev)
   - [`signup`](#dev-signup)
 - [Device](#device)
+  - [`events`](#device-events)
+  - [`latest-vehicle`](#device-latest-vehicle)
   - [`list`](#device-list)
   - [`set-current`](#device-set-current)
   - [`locations`](#device-locations)
   - [`snapshots`](#device-snapshots)
+  - [`messages`](#device-messages)
   - [`vehicles`](#device-vehicles)
 - [Dummy](#dummy)
   - [`create`](#dummy-create)
@@ -113,6 +116,19 @@ Create a developer account.  Will prompt for the following values: `firstName`, 
 You will be sent a confirmation email that needed to activate your account before you can proceed.
 
 ## Device
+### `device events`
+Get device event history.
+
+Requires `--device` param or current device saved in `.vinlirc`. Supports output formatting with `--output`. Requires `app` and `secret`.
+
+Pagination parameters for `device locations`:
+* `--limit`
+* `--since`
+* `--until`
+### `device latest-vehicle`
+Get the vehicle information for last vehicle a device was seen in.
+Requires `--device` param or current device saved in `.vinlirc`. Supports output formatting with `--output`. Requires `app` and `secret`.
+
 ### `device list`
 Get a list of devices that available to an app.  These can be real devices or dummies.  Supports output formatting with `--output`. Requires `app` and `secret`.
 
@@ -121,7 +137,7 @@ Pagination parameters for `device list`:
 * `--offset`
 
 ### `device set-current`
-Most commands require the selection of a device.  This is similar to the app selection and will also be stored in the nearest `.vinlirc` file.  Requires `app` and `secret`.
+Most commands require the selection of a device.  This is similar to the app selection and will also be stored in the nearest `.vinlirc` file.  Requires `--device` param. Requires `app` and `secret`.
 
 * `vinli device set-current --device 74ce1599-72e3-4353-8637-0cc4e2bffe54`
 
@@ -132,7 +148,7 @@ As with the app selection, device selection can be provided on a per-command bas
 ### `device locations`
 Get a list of location coordinates for a device.
 
-Fields in output can be limited with `--fields [list]` parameter. Supports output formatting with `--output`. Requires `app` and `secret`.
+Requires `--device` param or current device saved in `.vinlirc`. Fields in output can be limited with `--fields [list]` parameter. Supports output formatting with `--output`. Requires `app` and `secret`.
 
 Pagination parameters for `device locations`:
 * `--limit`
@@ -142,7 +158,17 @@ Pagination parameters for `device locations`:
 ### `device snapshots`
 Get a list of telemetry snapshots for a device.
 
-Fields in output can be limited with `--fields [list]` parameter. Supports output formatting with `--output`. Requires `app` and `secret`.
+Requires `--device` param or current device saved in `.vinlirc`. Fields in output can be limited with `--fields [list]` parameter. Supports output formatting with `--output`. Requires `app` and `secret`.
+
+Pagination parameters for `device snapshots`:
+* `--limit`
+* `--since`
+* `--until`
+
+### `device messages`
+Get recent messages that a device has sent in to the platform.
+
+Requires `--device` param or current device saved in `.vinlirc`. Supports output formatting with `--output`. Requires `app` and `secret`.
 
 Pagination parameters for `device snapshots`:
 * `--limit`
@@ -152,7 +178,7 @@ Pagination parameters for `device snapshots`:
 ### `device vehicles`
 Get a list of vehicles a devices has been in.
 
-Supports output formatting with `--output`. Requires `app` and `secret`.
+Requires `--device` param or current device saved in `.vinlirc`. Supports output formatting with `--output`. Requires `app` and `secret`.
 
 Pagination parameters for `device snapshots`:
 * `--limit`
