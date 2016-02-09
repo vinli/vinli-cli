@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const colors = require('colors');  // eslint-disable-line no-unused-vars
+const colors = require('colors/safe');
 const dummy = require('../lib/dummy');
 const program = require('commander');
 const vinlirc = require('../lib/vinlirc');
@@ -22,4 +22,4 @@ dummy.find(vinlirc.read(program))
       .save(d, program.global)
       .tap(() => console.log(JSON.stringify(d, null, 2)))
   )
-  .then((file) => console.log(`Saved to ${file}`.green));
+  .then((file) => console.log(colors.green(`Saved to ${file}`)));

@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 'use strict';
 
+const _ = require('lodash');
 const B = require('bluebird');
-const prompt = B.promisifyAll(require('prompt'));
-const program = require('commander');
-const yarp = require('yarp');
 const Cheerio = require('cheerio');
+const colors = require('colors/safe');
+const program = require('commander');
+const prompt = B.promisifyAll(require('prompt'));
 const Qs = require('querystring');
 const service = require('../lib/service');
 const Url = require('url');
-const _ = require('lodash');
 const vinlirc = require('../lib/vinlirc');
+const yarp = require('yarp');
 
 const authService = service('auth');
 
@@ -20,8 +21,8 @@ const extractCookie = function(headers) {
   return headers['set-cookie'][0].match(cookieRegex)[0];
 };
 
-prompt.message = 'signup'.cyan;
-prompt.delimiter = ':'.cyan;
+prompt.message = colors.cyan('signup');
+prompt.delimiter = colors.cyan(':');
 prompt.start();
 
 program
