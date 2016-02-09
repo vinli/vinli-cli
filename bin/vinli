@@ -4,7 +4,7 @@
 process.title = 'vinli';
 
 const _ = require('lodash');
-const colors = require('colors');  // eslint-disable-line no-unused-vars
+const colors = require('colors/safe');
 const config = require('../package.json');
 const fuzzy = require('../lib/fuzzy_find');
 const program = require('commander');
@@ -25,11 +25,11 @@ const subCmd = _.head(program.args);
 const cmds = _.map(program.commands, '_name');
 
 if (!_.includes(cmds, subCmd)) {
-  console.log(`vinli:'` + `${subCmd}`.bold.red + `' is not a vinli command. See 'vinli --help'.\n`);  // eslint-disable-line
+  console.log(`vinli:'` + colors.red.bold(`${subCmd}`) + `' is not a vinli command. See 'vinli --help'.\n`);  // eslint-disable-line
   const possibles = fuzzy.command(cmds, subCmd);
   if (possibles.length) {
     console.log('Did you mean this?');
-    console.log(`\t${possibles.join('\n\t')}`.cyan);
+    console.log(colors.cyan(`\t${possibles.join('\n\t')}`));
   } else {
     program.help();
   }

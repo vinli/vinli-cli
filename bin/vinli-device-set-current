@@ -3,7 +3,7 @@
 
 const _ = require('lodash');
 const B = require('bluebird');
-const colors = require('colors');  // eslint-disable-line no-unused-vars
+const colors = require('colors/safe');
 const dummy = require('../lib/dummy');
 const program = require('commander');
 const vinlirc = require('../lib/vinlirc');
@@ -29,4 +29,4 @@ device.deviceName = _.get(program, 'deviceName');
 
 B.props(device)
   .then((d) => vinlirc.save(d, program.global))
-  .then((file) => console.log(`Saved to ${file}`.green));
+  .then((file) => console.log(colors.green(`Saved to ${file}`)));

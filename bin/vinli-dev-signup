@@ -2,7 +2,7 @@
 'use strict';
 
 const B = require('bluebird');
-const colors = require('colors');  // eslint-disable-line no-unused-vars
+const colors = require('colors/safe');
 const program = require('commander');
 const prompt = B.promisifyAll(require('prompt'));
 const service = require('../lib/service');
@@ -18,8 +18,8 @@ program
   .option('--password [password]')
   .parse(process.argv);
 
-prompt.message = 'signup'.cyan;
-prompt.delimiter = ':'.cyan;
+prompt.message = colors.cyan('signup');
+prompt.delimiter = colors.cyan(':');
 prompt.start();
 
 console.log('Let\'s create your developer account: ');
@@ -57,12 +57,12 @@ prompt.getAsync([
     }
   })
 )
-.then(() => console.log('Check your email'.green))
+.then(() => console.log(colors.green('Check your email')))
 .catch((err) => {
   if (err.message === 'canceled') {
     return console.log('\nVinli will be here when you need us');
   }
   if (err.data && err.data.message) {
-    return console.log(`\t${err.data.message}`.red);
+    return console.log(colors.red(`\t${err.data.message}`));
   }
 });

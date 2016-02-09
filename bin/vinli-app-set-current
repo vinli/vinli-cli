@@ -4,7 +4,7 @@
 const _ = require('lodash');
 const App = require('../lib/app');
 const B = require('bluebird');
-const colors = require('colors');  // eslint-disable-line no-unused-vars
+const colors = require('colors/safe');
 const devPortal = require('../lib/service')('dev');
 const program = require('commander');
 const prompt = B.promisifyAll(require('prompt'));
@@ -20,8 +20,8 @@ program
   .option('-g, --global', 'save to .vinlirc in your home directory instead')
   .parse(process.argv);
 
-prompt.message = 'Developer Account'.cyan;
-prompt.delimiter = ':'.cyan;
+prompt.message = colors.cyan('Developer Account');
+prompt.delimiter = colors.cyan(':');
 prompt.start();
 
 if (!(program.app)) {
@@ -61,10 +61,10 @@ B.resolve()
   })
   .tap((appSettings) => console.log(`Setting Current: ${appSettings.appName || appSettings.app}`))
   .then((appSettings) => vinlirc.save(appSettings, program.global))
-  .then((file) => console.log(`Saved to ${file}`.green))
+  .then((file) => console.log(colors.green(`Saved to ${file}`)))
   .catch((err) => {
     if (err.message === 'canceled') {
-      return console.log('\nYou can also save to VINLI_APP and VINLI_SECRET environment variables or use --app --secret parameters or enter at prompt'.cyan);
+      return console.log(colors.cyan('\nYou can also save to VINLI_APP and VINLI_SECRET environment variables or use --app --secret parameters or enter at prompt'));
     }
-    return console.log(`\t${err.message}`.red);
+    return console.log(colors.red(`\t${err.message}`));
   });

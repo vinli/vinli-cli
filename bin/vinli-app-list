@@ -2,7 +2,7 @@
 'use strict';
 
 const B = require('bluebird');
-const colors = require('colors');  // eslint-disable-line no-unused-vars
+const colors = require('colors/safe');
 const devPortal = require('../lib/service')('dev');
 const Output = require('../lib/output');
 const program = require('commander');
@@ -16,8 +16,8 @@ program
   .option('-o, --output [format]', 'Output format, <table|json|yaml|text>, default: table', /^(json|table|text|yaml)$/i, 'table')
   .parse(process.argv);
 
-prompt.message = 'Developer Account'.cyan;
-prompt.delimiter = ':'.cyan;
+prompt.message = colors.cyan('Developer Account');
+prompt.delimiter = colors.cyan(':');
 prompt.start();
 
 const listApps = (email, password) => {
@@ -67,8 +67,8 @@ B.resolve()
   })
   .catch((err) => {
     if (err.message === 'canceled') {
-      return console.log('\nYou can always view your apps at https://dev.vin.li'.cyan);
+      return console.log(colors.cyan('\nYou can always view your apps at https://dev.vin.li'));
     }
-    return console.log(`\t${err.message}`.red);
+    return console.log(colors.red(`\t${err.message}`));
   })
   .done();

@@ -3,6 +3,7 @@
 
 const _ = require('lodash');
 const B = require('bluebird');
+const colors = require('colors/safe');
 const dummy = require('../lib/dummy');
 const program = require('commander');
 const prompt = B.promisifyAll(require('prompt'));
@@ -12,8 +13,8 @@ const vinlirc = require('../lib/vinlirc');
 
 const authService = service('auth');
 
-prompt.message = 'Add Device'.cyan;
-prompt.delimiter = ':'.cyan;
+prompt.message = colors.cyan('Add Device');
+prompt.delimiter = colors.cyan(':');
 prompt.start();
 
 program
@@ -28,7 +29,7 @@ program
   .parse(process.argv);
 
 if (program.dummy && program.caseId) {
-  console.log('Only dummy OR case-id can be set'.red);
+  console.log(colors.red('Only dummy OR case-id can be set'));
 }
 
 const addDevice = (email, password, caseId, name) => {
@@ -44,7 +45,7 @@ const addDevice = (email, password, caseId, name) => {
           'device[name]': name
         }
       });
-    }).then(() => console.log('\tDevice Added'.green))
+    }).then(() => console.log(colors.green('\tDevice Added')))
     .catch((err) => {
       if (err.statusCode) {
         throw new Error(err.data.message);
@@ -99,8 +100,8 @@ B.resolve(vinlirc.read(program))
   })
   .catch((err) => {
     if (err.message === 'canceled') {
-      return console.log('\nYou can always add a device to your account at https://my.vin.li'.cyan);
+      return console.log(colors.cyan('\nYou can always add a device to your account at https://my.vin.li'));
     }
-    console.log(`\t${err.message.red}`);
+    console.log(colors.red(`\t${err.message}`));
   })
   .done();
