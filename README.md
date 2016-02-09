@@ -125,6 +125,7 @@ Pagination parameters for `device locations`:
 * `--limit`
 * `--since`
 * `--until`
+
 ### `device latest-vehicle`
 Get the vehicle information for last vehicle a device was seen in.
 Requires `--device` param or current device saved in `.vinlirc`. Supports output formatting with `--output`. Requires `app` and `secret`.
