@@ -15,5 +15,6 @@ program
   .command('events', 'Retrieve device event history')
   .command('vehicles', 'Retrieve device vehicle history')
   .command('latest-vehicle', 'Retrieve latest vehicle associated with the device')
+  .command('stream', 'Subscribe to a stream of device messages')
   .command('set-current', 'Save a device id to .vinlirc for easy retrieval by other commands')
   .parse(process.argv);
