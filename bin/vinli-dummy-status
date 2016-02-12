@@ -2,6 +2,7 @@
 'use strict';
 
 const _ = require('lodash');
+const assertAppSecret = require('../lib/app').assertAppSecret;
 const B = require('bluebird');
 const dummy = require('../lib/dummy');
 const Output = require('../lib/output');
@@ -21,6 +22,7 @@ program
   .parse(process.argv);
 
 B.resolve(vinlirc.read(program))
+  .then(assertAppSecret)
   .then((options) => {
     if (options.dummy) {
       return options;

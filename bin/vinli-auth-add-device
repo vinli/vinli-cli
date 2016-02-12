@@ -2,6 +2,7 @@
 'use strict';
 
 const _ = require('lodash');
+const assertAppSecret = require('../lib/app').assertAppSecret;
 const B = require('bluebird');
 const colors = require('colors/safe');
 const dummy = require('../lib/dummy');
@@ -83,9 +84,7 @@ B.resolve(vinlirc.read(program))
   })
   .then((options) => {
     if (program.dummy) {
-      if (!(options.app && options.secret)) {
-        throw new Error('Must specify --app & --secret parameters or save to vinlirc with `vinli-cli app set-current`');
-      }
+      assertAppSecret(options);
       return dummy.find(options)
         .then((dum) => _.merge(options, dum));
     }

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+const assertAppSecret = require('../lib/app').assertAppSecret;
 const B = require('bluebird');
 const program = require('commander');
 const service = require('../lib/service');
@@ -62,6 +63,7 @@ const displayMessage = (msg) => {
 };
 
 B.resolve(vinlirc.read(program))
+  .then(assertAppSecret)
   .then((options) => {
     console.error('Creating websocket...');
 

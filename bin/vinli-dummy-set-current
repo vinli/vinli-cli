@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+const assertAppSecret = require('../lib/app').assertAppSecret;
 const colors = require('colors/safe');
 const dummy = require('../lib/dummy');
 const program = require('commander');
@@ -16,7 +17,9 @@ if (!program.dummy) {
   program.help();
 }
 
-dummy.find(vinlirc.read(program))
+vinlirc.read(program)
+  .then(assertAppSecret)
+  .then(dummy.find)
   .then((d) =>
     vinlirc
       .save(d, program.global)

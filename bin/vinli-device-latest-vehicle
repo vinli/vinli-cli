@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+const assertAppSecret = require('../lib/app').assertAppSecret;
 const B = require('bluebird');
 const program = require('commander');
 const yarp = require('yarp');
@@ -20,6 +21,7 @@ program
   .parse(process.argv);
 
 B.resolve(vinlirc.read(program))
+  .then(assertAppSecret)
   .then((options) =>
     yarp({
       url: `${platformService}/api/v1/devices/${options.device}/vehicles/_latest`,
