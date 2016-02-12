@@ -67,6 +67,7 @@ B.resolve(vinlirc.read(program))
         name: 'password',
         default: program.password,
         hidden: true,
+        replace: '*',
         required: true,
         description: 'MyVinli password (not saved)'
       },
