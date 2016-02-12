@@ -2,6 +2,7 @@
 'use strict';
 
 const _ = require('lodash');
+const assertAppSecret = require('../lib/app').assertAppSecret;
 const B = require('bluebird');
 const dummy = require('../lib/dummy');
 const program = require('commander');
@@ -35,6 +36,7 @@ const randomVin = () => {
 };
 
 B.resolve(vinlirc.read(program))
+  .then(assertAppSecret)
   .then((options) =>
     B.props(_.merge(options, {
       dummyFind: dummy.find(options),

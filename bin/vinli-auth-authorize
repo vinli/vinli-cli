@@ -2,6 +2,7 @@
 'use strict';
 
 const _ = require('lodash');
+const assertAppSecret = require('../lib/app').assertAppSecret;
 const B = require('bluebird');
 const Cheerio = require('cheerio');
 const colors = require('colors/safe');
@@ -115,6 +116,7 @@ const authorize = function(email, password, clientId, redirectUri) {
 };
 
 B.resolve(vinlirc.read(program))
+  .then(assertAppSecret)
   .then((options) =>
     yarp({
       url: `${authService}/api/v1/clients`,

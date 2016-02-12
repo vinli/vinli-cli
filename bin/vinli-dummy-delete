@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+const assertAppSecret = require('../lib/app').assertAppSecret;
 const B = require('bluebird');
 const program = require('commander');
 const prompt = B.promisifyAll(require('prompt'));
@@ -21,16 +22,13 @@ program
   .parse(process.argv);
 
 B.resolve(vinlirc.read(program))
+  .then(assertAppSecret)
   .then((options) => {
     return dummy.find(options)
       .then((dum) => _.merge(options, dum));
   })
-  .then((options) => {
-    if (!(options.app && options.secret)) {
-      throw new Error('Must specify --app & --secret parameters or save to vinlirc with `vinli-cli app set-current`');
-    }
-
-    return B.props({
+  .then((options) =>
+    B.props({
       resp: yarp({
         url: `${dummyService}/api/v1/dummies/${options.dummy}/runs/_current`,
         auth: {
@@ -39,8 +37,8 @@ B.resolve(vinlirc.read(program))
         }
       }),
       options: options
-    });
-  })
+    })
+  )
   .then((clump) => {
     return B.props(_.merge(clump, {
       route: _.get(clump, 'resp.run.status.routeId') ? yarp({
