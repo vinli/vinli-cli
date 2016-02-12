@@ -1,0 +1,110 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const program = require('commander');
+const service = require('../lib/service');
+const vinlirc = require('../lib/vinlirc');
+const WebSocket = require('ws');
+const moment = require('moment');
+const _ = require('lodash');
+const colors = require('colors/safe');
+
+const streamService = service('stream');
+
+const MAX_KEY_LEN = _.max(_.map(Object.keys(require('../lib/parameters')), 'length'));
+
+program
+  .description('Subscribe to a stream of device messages')
+  .option('--app [app id]')
+  .option('--secret [app secret]')
+  .option('--device [device id]')
+  .option('-o, --output [format]', 'Output format, <table|json>, default: table', /^(json|table)$/i, 'table')
+
+  .parse(process.argv);
+
+const strLen = (string) => {
+  return _.filter(string, (s) => {
+    return Number(s) === Number(s);
+  }).length;
+};
+
+const displayMessage = (msg) => {
+  if (program.output === 'json') {
+    console.log(JSON.stringify(msg.payload));
+    return;
+  }
+
+  let line = '';
+
+  line += ` ${colors.cyan('lon:')} `;
+  line += _.padEnd(_.get(msg, 'payload.data.location.coordinates[0]', '----------'), 11);
+  line += ` ${colors.cyan('lat:')} `;
+  line += _.padEnd(_.get(msg, 'payload.data.location.coordinates[1]', '----------'), 11);
+  line += '  ';
+
+  const keys = _.sortBy(Object.keys(_.omit(msg.payload.data, [ 'location', 'accel' ])));
+
+  const dataBlock = _.map(keys, (key, i) => {
+    const row = `${colors.cyan(_.padStart(key, MAX_KEY_LEN))}: ${msg.payload.data[key]}`;
+
+    if (i === 0) {
+      return row;
+    }
+
+    return `${_.padStart('', strLen(line) + 3)}${row}`;
+  }).join('\n');
+
+  line += dataBlock;
+
+  const timestamp = moment(msg.payload.timestamp).format('YYYY-MM-DD HH:mm:ss ZZ');
+  console.log(`${_.padEnd(`${timestamp} `, 91, '-')}\n${line}`);
+};
+
+B.resolve(vinlirc.read(program))
+  .then((options) => {
+    console.error('Creating websocket...');
+
+    const ws = new WebSocket(`${streamService}/api/v1/messages`, null, {
+      headers: {
+        Authorization: `Basic ${new Buffer(`${options.app}:${options.secret}`).toString('base64')}`
+      }
+    });
+
+    ws.on('open', () => {
+      console.error(` - Websocket open.\nSubscribing to device ${options.device}...`);
+      ws.send(JSON.stringify({
+        type: 'sub',
+        subject: {
+          type: 'device',
+          id: options.device
+        }
+      }));
+    });
+
+    ws.on('error', (err) => {
+      console.error(err);
+    });
+
+    ws.on('message', (data) => {
+      const payload = JSON.parse(data);
+      switch (payload.type) {
+        case 'sub':
+          if (payload.payload.ack) {
+            console.error(` - Subscription acknowledged (${payload.subject.type} ${payload.subject.id})`);
+          }
+          break;
+        case 'health':
+          // TODO: something here
+          break;
+        case 'pub':
+          displayMessage(payload);
+          break;
+        default:
+          console.log(data);
+          break;
+      }
+    });
+  })
+  .catch(require('../lib/error_handler'))
+  .done();

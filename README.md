@@ -25,6 +25,7 @@ Badge to be added in when there is some stats history:
   - [`set-current`](#device-set-current)
   - [`locations`](#device-locations)
   - [`snapshots`](#device-snapshots)
+  - [`stream`](#device-stream)
   - [`messages`](#device-messages)
   - [`vehicles`](#device-vehicles)
 - [Dummy](#dummy)
@@ -165,6 +166,11 @@ Pagination parameters for `device snapshots`:
 * `--limit`
 * `--since`
 * `--until`
+
+### `device stream`
+Subscribe to a stream of device messages.
+
+Requires `--device` param or current device saved in `.vinlirc`. Requires `app` and `secret`. Supports output formatting with `--output`, but only `table` and `json` are supported.s
 
 ### `device messages`
 Get recent messages that a device has sent in to the platform.
