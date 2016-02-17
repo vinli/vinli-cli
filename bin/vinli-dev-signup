@@ -39,7 +39,8 @@ prompt.getAsync([
   {
     name: 'password',
     default: program.password,
-    hidden: true
+    hidden: true,
+    replace: '*'
   }
 ])
 .tap(() => console.log('Creating your account ...'))

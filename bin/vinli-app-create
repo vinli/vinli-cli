@@ -74,6 +74,7 @@ B.resolve()
           name: 'password',
           default: program.password,
           hidden: true,
+          replace: '*',
           required: true,
           description: 'Developer account password (not saved)'
         },

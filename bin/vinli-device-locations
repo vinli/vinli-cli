@@ -2,6 +2,7 @@
 'use strict';
 
 const assertAppSecret = require('../lib/app').assertAppSecret;
+const dateUtils = require('../lib/dates');
 const B = require('bluebird');
 const program = require('commander');
 const yarp = require('yarp');
@@ -37,7 +38,9 @@ B.resolve(vinlirc.read(program))
       url: `${telemetryService}/api/v1/devices/${options.device}/locations`,
       qs: {
         limit: _.get(program, 'limit', 10),
-        fields: program.fields ? _.get(program, 'fields', []).join(',') : undefined
+        fields: program.fields ? _.get(program, 'fields', []).join(',') : undefined,
+        since: dateUtils.convertSince(program),
+        until: dateUtils.convertUntil(program)
       },
       auth: {
         user: options.app,
