@@ -14,7 +14,7 @@ const yarp = require('yarp');
 const dummyService = service('dummy');
 
 program
-  .description('Get a list of dummy devices')
+  .description('Retrieve dummy status')
   .option('--app [app id]')
   .option('--secret [app secret]')
   .option('--dummy <id|name>')
@@ -23,6 +23,7 @@ program
 
 B.resolve(vinlirc.read(program))
   .then(assertAppSecret)
+  .then(dummy.assertDummy)
   .then((options) => {
     if (options.dummy) {
       return options;

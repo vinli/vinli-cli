@@ -19,6 +19,7 @@ if (!program.dummy) {
 
 vinlirc.read(program)
   .then(assertAppSecret)
+  .then(dummy.assertDummy)
   .then(dummy.find)
   .then((d) =>
     vinlirc

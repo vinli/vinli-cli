@@ -38,7 +38,7 @@ B.resolve(vinlirc.read(program))
       url: `${telemetryService}/api/v1/devices/${options.device}/locations`,
       qs: {
         limit: _.get(program, 'limit', 10),
-        fields: program.fields ? _.get(program, 'fields', []).join(',') : undefined,
+        fields: program.fields ? _.get(program, 'fields', []).join(',') : undefined, // eslint-disable-line no-undefined
         since: dateUtils.convertSince(program),
         until: dateUtils.convertUntil(program)
       },

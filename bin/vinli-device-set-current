@@ -23,7 +23,7 @@ if (!(program.device || program.dummy || program.caseId)) {
 
 const device = {};
 
-device.dummy = program.dummy ? dummy.find(vinlirc.read(program)) : undefined;
+device.dummy = program.dummy ? dummy.find(vinlirc.read(program)) : undefined; // eslint-disable-line no-undefined
 device.caseId = _.get(program, 'caseId');
 device.deviceName = _.get(program, 'deviceName');
 

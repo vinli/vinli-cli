@@ -14,7 +14,7 @@ const yarp = require('yarp');
 const dummyService = service('dummy');
 
 program
-  .description('Get a list of dummy devices')
+  .description('Start a run')
   .option('--app [app id]')
   .option('--secret [app secret]')
   .option('--dummy <id|name>')
@@ -35,19 +35,10 @@ const randomVin = () => {
   return text;
 };
 
-const validateOptions = (options) => {
-  if(!options.dummy) {
-    throw new Error(`Dummy device ID not set.  Set a dummy device ID with a --dummy parameter.\nOr save to vinlirc with 'vinli-cli dummy set-current'`);
-  }
-  if(!options.route) {
-    throw new Error(`Route ID not set.  Set a route ID with a --route parameter.`);
-  }
-  return options;
-}
-
 B.resolve(vinlirc.read(program))
   .then(assertAppSecret)
-  .then(validateOptions)
+  .then(dummy.assertDummy)
+  .then(route.assertRoute)
   .then((options) =>
     B.props(_.merge(options, {
       dummyFind: dummy.find(options),

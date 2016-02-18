@@ -6,6 +6,7 @@
   "main": "bin/vinli",
   "scripts": {
     "test": "NODE_ENV=test mocha --recursive -R spec",
+    "lint": "eslint --quiet bin/* .",
     "start": "bin/vinli",
     "perm": "chmod -R a+x ./bin/*"
   },

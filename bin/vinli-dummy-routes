@@ -13,7 +13,7 @@ const vinlirc = require('../lib/vinlirc');
 const dummyService = service('dummy');
 
 program
-  .description('Get a list of dummy devices')
+  .description('List available dummy routes')
   .option('--app [app id]')
   .option('--secret [app secret]')
   .option('--limit [number]')

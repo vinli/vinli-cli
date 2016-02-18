@@ -23,6 +23,7 @@ program
 
 B.resolve(vinlirc.read(program))
   .then(assertAppSecret)
+  .then(dummy.assertDummy)
   .then((options) => {
     return dummy.find(options)
       .then((dum) => _.merge(options, dum));

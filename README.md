@@ -262,7 +262,7 @@ This is a comprehensive example starting from signing up for a developer account
 > vinli dev signup
   [prompted for name, email and password.  Must]
 
-> vlinli app create --name "My App"
+> vinli app create --name "My App"
   [prompted for email and password]
 
 > vinli app set-current "My App"
