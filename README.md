@@ -1,5 +1,7 @@
-Vinli CLI
+Vinli CLI [![Build Status](https://travis-ci.org/vinli/vinli-cli.svg?branch=master)](https://travis-ci.org/vinli/vinli-cli)
 =========
+Command line interface for developers on the Vinli platform.
+
 [![NPM](https://nodei.co/npm/vinli-cli.png?downloadRank=true)](https://nodei.co/npm/vinli-cli/)
 <!--
 Badge to be added in when there is some stats history:
