@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 'use strict';
 
-const assertAppSecret = require('../lib/app').assertAppSecret;
-const dateUtils = require('../lib/dates');
-const B = require('bluebird');
-const program = require('commander');
-const yarp = require('yarp');
 const _ = require('lodash');
-const Output = require('../lib/output');
-const service = require('../lib/service');
-const moment = require('moment');
-const vinlirc = require('../lib/vinlirc');
+const assertAppSecret = require('../lib/app').assertAppSecret;
+const assertDevice = require('../lib/device').assertDevice;
+const B = require('bluebird');
 const color = require('colors/safe');
+const dateUtils = require('../lib/dates');
+const moment = require('moment');
+const Output = require('../lib/output');
+const program = require('commander');
+const service = require('../lib/service');
+const vinlirc = require('../lib/vinlirc');
+const yarp = require('yarp');
 
 const eventService = service('event');
 
@@ -29,6 +30,7 @@ program
 
 B.resolve(vinlirc.read(program))
   .then(assertAppSecret)
+  .then(assertDevice)
   .then((options) =>
     yarp({
       url: `${eventService}/api/v1/devices/${options.device}/events`,
