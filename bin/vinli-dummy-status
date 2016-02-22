@@ -25,10 +25,8 @@ B.resolve(vinlirc.read(program))
   .then(assertAppSecret)
   .then(dummy.assertDummy)
   .then((options) => {
-    if (options.dummy) {
-      return options;
-    }
-    return B.props(_.merge(options, dummy.find(options)));
+    return dummy.find(options)
+      .then((dum) => _.merge(options, dum));
   })
   .then((options) =>
     B.props({
