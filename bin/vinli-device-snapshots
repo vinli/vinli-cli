@@ -2,6 +2,7 @@
 'use strict';
 
 const assertAppSecret = require('../lib/app').assertAppSecret;
+const assertDevice = require('../lib/device').assertDevice;
 const dateUtils = require('../lib/dates');
 const B = require('bluebird');
 const program = require('commander');
@@ -33,6 +34,7 @@ program
 
 B.resolve(vinlirc.read(program))
   .then(assertAppSecret)
+  .then(assertDevice)
   .then((options) =>
     yarp({
       url: `${telemetryService}/api/v1/devices/${options.device}/snapshots`,

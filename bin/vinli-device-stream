@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 'use strict';
 
+const _ = require('lodash');
 const assertAppSecret = require('../lib/app').assertAppSecret;
+const assertDevice = require('../lib/device').assertDevice;
 const B = require('bluebird');
+const colors = require('colors/safe');
+const moment = require('moment');
 const program = require('commander');
 const service = require('../lib/service');
 const vinlirc = require('../lib/vinlirc');
 const WebSocket = require('ws');
-const moment = require('moment');
-const _ = require('lodash');
-const colors = require('colors/safe');
 
 const streamService = service('stream');
 
@@ -64,6 +65,7 @@ const displayMessage = (msg) => {
 
 B.resolve(vinlirc.read(program))
   .then(assertAppSecret)
+  .then(assertDevice)
   .then((options) => {
     console.error('Creating websocket...');
 
