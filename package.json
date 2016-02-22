@@ -29,9 +29,9 @@
   },
   "devDependencies": {
     "chai": "^3.4.1",
-    "eslint": "^1.10.3",
-    "eslint-config-vinli": "^4.1.0",
-    "eslint-plugin-mocha": "^1.1.0",
+    "eslint": "^2.2.0",
+    "eslint-config-vinli": "^5.0.0",
+    "eslint-plugin-mocha": "^2.0.0",
     "istanbul": "^0.4.2",
     "mocha": "^2.3.4"
   },

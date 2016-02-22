@@ -102,6 +102,6 @@ B.resolve(vinlirc.read(program))
     if (err.message === 'canceled') {
       return console.log(colors.cyan('\nYou can always add a device to your account at https://my.vin.li'));
     }
-    console.log(colors.red(`\t${err.message}`));
+    return console.log(colors.red(`\t${err.message}`));
   })
   .done();

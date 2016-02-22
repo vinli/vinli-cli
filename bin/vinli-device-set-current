@@ -10,10 +10,10 @@ const vinlirc = require('../lib/vinlirc');
 
 program
   .description('Save device info to .vinlirc for easy access by other commands')
-  .option('--device [deviceId]', 'either device or dummy must be set')
-  .option('--case-id [caseId]', 'required device to be set')
+  .option('--dummy [dummy name or id]', 'device or dummy required. If dummy then device, case-id, device-name ignored')
+  .option('--device [deviceId]', 'either device or dummy required')
+  .option('--case-id [caseId]', 'device to be set')
   .option('--device-name [name]')
-  .option('--dummy [dummy name or id]', 'device or dummy must be set')
   .option('-g, --global', 'save to .vinlirc in your home directory instead')
   .parse(process.argv);
 
@@ -25,8 +25,10 @@ const device = {};
 
 device.dummy = program.dummy ? dummy.find(vinlirc.read(program)) : undefined; // eslint-disable-line no-undefined
 device.caseId = _.get(program, 'caseId');
+device.device = _.get(program, 'device');
 device.deviceName = _.get(program, 'deviceName');
 
 B.props(device)
+  .then((d) => d.dummy ? d.dummy : d)
   .then((d) => vinlirc.save(d, program.global))
   .then((file) => console.log(colors.green(`Saved to ${file}`)));

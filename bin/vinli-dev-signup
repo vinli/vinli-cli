@@ -66,4 +66,5 @@ prompt.getAsync([
   if (err.data && err.data.message) {
     return console.log(colors.red(`\t${err.data.message}`));
   }
+  return console.log(colors.red(`\t${err.message}`));
 });
