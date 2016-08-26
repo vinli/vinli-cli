@@ -66,6 +66,7 @@ This will create a global command `vinli` which you can run from anywhere.  To u
 - **Dummy** - Dummies are virtual devices can be created on demand and sent on virtual trips on predefined routes.  A dummy can be added to a My Vinli account that has authorized your app and when it starts a trip the data will come into your application in real time exactly the same as a real Vinli device. Commands that act on a dummy can have a dummy specified by name or id with the `--dummy` parameter, `VINL_DUMMY` environment variable or saved to nearest `.vinlirc` file with `dummy set-current`.  Dummies are associated with an app and there is a limit of 5 per app.  They can be reused multiple times and deleted.
 - **since** & **until** - Commands that output sets of dated sets of data can be limited with `--since` and `--until` parameters (or `VINLI_SINCE` / `VINLI_UNTIL` environment variables).  Use either or both parameters to limit the output of the command.  You can enter anything that will parse to a javascript date like `2016-02-14`, `2016-02-14T06:00:00.000Z`, '1455429600000' (milliseconds Epoch), or relative values like `1 hour ago` (seconds/minutes/hours/days/weeks/months/years)
 - **Output** - Output of almost all commands can be formatted to support easier integration with the parameter `--output [format]` or `-o [format]`.  Supported formats are `table` (default), `json`, `yaml`, or `text`
+- **Version** - `-V` or `--version` parameters output the current version of vinli-cli
 - **Help** - `-h` or `--help` with any command or subcommand will output help contents and accepted parameters.  Ex: `vinli --help`, `vinli app -h`, `vinli dummy set-current --help`.
 
 ## App
@@ -91,7 +92,7 @@ List current apps for your dev-portal account.  Will prompt you for your login a
 This selection will be saved in the closest `.vinlirc` file.  Vinli-cli will prompt for your dev-portal email and password to lookup the app (either by name or by id) and will retrieve the corresponding secret.  If you are not currently signed in to a developer account, you can specify the appId and appSecret to use:
 * `vinli app set-current --app "My App"` - will use your dev-portal token to find an app with the nearest name
 * `vinli app set-current --app 6cbced16-d831-469c-898d-8b83f0f8fd5f` - will use your dev-portal token to find the app with the given ID
-* `vinli app set current --app d0810cc9-3e78-4411-a6ff-4ebb4a4c0243 --secret xZmuKWEJrTUM66mxeEjan` - will set the app credentials directly
+* `vinli app set-current --app d0810cc9-3e78-4411-a6ff-4ebb4a4c0243 --secret xZmuKWEJrTUM66mxeEjan` - will set the app credentials directly
 
 You can also specify the app individually in every command, which will not modify the current app selection in `.vinlirc`:
 * `vinli <service> <command>"` (app and secret loaded from nearest `.vinlirc` file)
