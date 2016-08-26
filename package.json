@@ -1,6 +1,6 @@
 {
   "name": "vinli-cli",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Vinli Developers don't use web interfaces",
   "preferGlobal": true,
   "main": "bin/vinli",
