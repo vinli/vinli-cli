@@ -1,0 +1,76 @@
+#!/usr/bin/env node
+'use strict';
+
+const _ = require('lodash');
+const assertAppSecret = require('../lib/app').assertAppSecret;
+const assertDevice = require('../lib/device').assertDevice;
+const B = require('bluebird');
+const color = require('colors/safe');
+const dateUtils = require('../lib/dates');
+const moment = require('moment');
+const Output = require('../lib/output');
+const program = require('commander');
+const service = require('../lib/service');
+const vinlirc = require('../lib/vinlirc');
+const yarp = require('yarp');
+
+const tripService = service('trip');
+
+program
+  .description('Get trip history for a device')
+  .option('--app [app id]')
+  .option('--secret [app secret]')
+  .option('--device [device id]')
+  .option('--limit [number]')
+  .option('--since [date]')
+  .option('--until [date]')
+  .option('-o, --output [number]')
+  .parse(process.argv);
+
+B.resolve(vinlirc.read(program))
+  .then(assertAppSecret)
+  .then(assertDevice)
+  .then((options) =>
+    yarp({
+      url: `${tripService}/api/v1/devices/${options.device}/trips`,
+      qs: {
+        limit: _.get(program, 'limit', 10),
+        since: dateUtils.convertSince(program),
+        until: dateUtils.convertUntil(program)
+      },
+      auth: {
+        user: options.app,
+        pass: options.secret
+      }
+    })
+  )
+  .then((resp) => {
+    const headers = [{
+      title: 'ID',
+      key: 'id'
+    }, {
+      title: 'Start',
+      key: 'start',
+      format: (date) => moment(date).format('YYYY-MM-DD HH:mm:ss ZZ')
+    }, {
+      title: 'Stop',
+      key: 'stop',
+      format: (date) => moment(date).format('YYYY-MM-DD HH:mm:ss ZZ')
+    }, {
+      title: 'Status',
+      key: 'status'
+    }, {
+      title: 'Avg. Speed',
+      key: 'stats.averageSpeed'
+    }, {
+      title: 'MPG',
+      key: 'stats.fuelEconomy'
+    }, {
+      title: 'Stop Count',
+      key: 'stats.stopCount'
+    }];
+
+    Output.printList(program.output, resp, 'trips', headers);
+  })
+  .catch(require('../lib/error_handler'))
+  .done();
