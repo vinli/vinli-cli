@@ -5,7 +5,6 @@ const _ = require('lodash');
 const assertAppSecret = require('../lib/app').assertAppSecret;
 const assertDevice = require('../lib/device').assertDevice;
 const B = require('bluebird');
-const color = require('colors/safe');
 const dateUtils = require('../lib/dates');
 const moment = require('moment');
 const Output = require('../lib/output');
