@@ -22,6 +22,7 @@ Badge to be added in when there is some stats history:
   - [`signup`](#dev-signup)
 - [Device](#device)
   - [`events`](#device-events)
+  - [`trips`](#device-trips)
   - [`latest-vehicle`](#device-latest-vehicle)
   - [`list`](#device-list)
   - [`set-current`](#device-set-current)
@@ -126,7 +127,17 @@ Get device event history.
 
 Requires `--device` param or current device saved in `.vinlirc`. Supports output formatting with `--output`. Requires `app` and `secret`.
 
-Pagination parameters for `device locations`:
+Pagination parameters for `device events`:
+* `--limit`
+* `--since`
+* `--until`
+
+### `device trips`
+Get device trip history.
+
+Requires `--device` param or current device saved in `.vinlirc`. Supports output formatting with `--output`. Requires `app` and `secret`.
+
+Pagination parameters for `device trips`:
 * `--limit`
 * `--since`
 * `--until`
