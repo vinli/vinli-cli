@@ -28,5 +28,5 @@ prompt.getAsync([
     stack: input.stack
   };
   vinlirc.save(stackSetting, program.global)
-  .then(() =>  console.log(colors.green(`🎉 Set stack to ${input.stack}! 🎉`)));
+  .then(() => console.log(colors.green(`🎉 Set stack to ${input.stack}! 🎉`)));
 });
