@@ -7,10 +7,10 @@ const program = require('commander');
 const vinlirc = require('../lib/vinlirc');
 
 program
-  .description('Print the current stack')
+  .description('Print the current stack');
 
   B.resolve(vinlirc.read(program))
-  .then(assertStack)
-  .then((options) => {
-    console.log(options.stack)
-  })
+    .then(assertStack)
+    .then((options) => {
+      console.log(options.stack);
+    });

@@ -12,21 +12,21 @@ program
   .option('--stack [stack]')
   .parse(process.argv);
 
-  prompt.message = colors.cyan('set stack');
-  prompt.delimiter = colors.cyan(':');
-  prompt.start();
+prompt.message = colors.cyan('set stack');
+prompt.delimiter = colors.cyan(':');
+prompt.start();
 
-  prompt.getAsync([
-    {
-      name: 'stack',
-      default: program.stack
-    }
-  ])
-  .tap(() => console.log('Setting the stack ...'))
-  .then(input => {
-    const stackSetting = {
-      stack: input.stack
-    }
-    vinlirc.save(stackSetting, program.global)
-    .then(() =>  console.log(colors.green(`🎉 Set stack to ${input.stack}! 🎉`)))
-  })
+prompt.getAsync([
+  {
+    name: 'stack',
+    default: program.stack
+  }
+])
+.tap(() => console.log('Setting the stack ...'))
+.then((input) => {
+  const stackSetting = {
+    stack: input.stack
+  };
+  vinlirc.save(stackSetting, program.global)
+  .then(() =>  console.log(colors.green(`🎉 Set stack to ${input.stack}! 🎉`)));
+});
