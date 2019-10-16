@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+'use strict';
+
+const B = require('bluebird');
+const colors = require('colors/safe');
+const program = require('commander');
+const prompt = B.promisifyAll(require('prompt'));
+const vinlirc = require('../lib/vinlirc');
+
+program
+  .description('Set the stack')
+  .option('--stack [stack]')
+  .parse(process.argv);
+
+prompt.message = colors.cyan('set stack');
+prompt.delimiter = colors.cyan(':');
+prompt.start();
+
+prompt.getAsync([
+  {
+    name: 'stack',
+    default: program.stack
+  }
+])
+.tap(() => console.log('Setting the stack ...'))
+.then((input) => {
+  const stackSetting = {
+    stack: input.stack
+  };
+  vinlirc.save(stackSetting, program.global)
+  .then(() => console.log(colors.green(`🎉 Set stack to ${input.stack}! 🎉`)));
+});

@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+'use strict';
+
+const assertStack = require('../lib/stack').assertStack;
+const B = require('bluebird');
+const program = require('commander');
+const vinlirc = require('../lib/vinlirc');
+
+program
+  .description('Print the current stack');
+
+B.resolve(vinlirc.read(program))
+  .then(assertStack)
+  .then((options) => {
+    console.log(options.stack);
+  });

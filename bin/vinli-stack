@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+'use strict';
+
+process.title = 'vinli';
+
+const program = require('commander');
+const config = require('../package.json');
+
+program
+  .version(config.version)
+  .command('print', 'Show which stack is currently set')
+  .alias('show')
+  .command('set', 'Set the stack Vinli CLI points to')
+  .parse(process.argv);

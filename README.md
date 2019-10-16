@@ -41,6 +41,9 @@ Badge to be added in when there is some stats history:
   - [`status`](#dummy-status)
   - [`stop`](#dummy-stop)
   - [`status`](#dummy-status)
+- [Stack](#Stack)
+  - [`set`](#stack-set)
+  - [`print`](#stack-print)
 - [`vinlirc`](#vinlirc)
 - [Example](#example)
 
@@ -50,7 +53,7 @@ Badge to be added in when there is some stats history:
 
 ### Prerequisites
 
-To install and use vinli-cli, you will need Node.js (version 4 or greater) and npm  ([nodejs.org](https://nodejs.org/en/download/package-manager)).
+To install and use vinli-cli, you will need Node.js (version 8 or greater) and npm  ([nodejs.org](https://nodejs.org/en/download/package-manager)).
 
 ### Install
 
@@ -59,6 +62,13 @@ To install and use vinli-cli, you will need Node.js (version 4 or greater) and n
 ```
 
 This will create a global command `vinli` which you can run from anywhere.  To update in the future, just run the same command again.
+
+### Set Stack
+Each Vinli platform deployment is hosted on a unique url. Vinli CLI needs to know which stack it should be talking you, thus you 
+can use `vinli stack set` to point Vinli CLI to the appropriate url. This also lets you toggle between dev/stage/prod 
+environments if need be.
+
+Stack should be set with a `.` prefix, for example `.partner.vin.li`
 
 ### Common Features
 
@@ -244,6 +254,15 @@ Specify a dummy name or id to stop all routes for.  Routes in progress take up t
 
 Requires `app` and `secret`.
 
+## Stack
+### `stack set`
+Sets the base domain/url for all api calls made by Vinli CLI.
+
+Stack is saved in `.vinlirc`.
+
+### `stack print`
+Prints the current stack from `.vinlirc`
+
 ## `vinlirc`
 `vinli vinlirc` - Outputs your current derived `.vinlirc` file.
 
@@ -273,6 +292,9 @@ CWD = /opt/node/myapp
 This is a comprehensive example starting from signing up for a developer account, creating an application, creating a dummy device, authorizing the app for a MyVinli account, adding the dummy device to an account, sending the dummy device on a virtual trip and viewing the telemetry data the app received from the device.
 
 ```bash
+> vinli stack set
+  [prompted for stack.  Must]
+
 > vinli dev signup
   [prompted for name, email and password.  Must]
 
