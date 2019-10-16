@@ -19,6 +19,7 @@ program
   .command('auth', 'Auth utilities')
   .command('app', 'Manage developer applications')
   .command('dev', 'Manage Developer Portal account')
+  .command('stack', 'Manage the Stack Vinli CLI interacts with')
   .parse(process.argv);
 
 const subCmd = _.head(program.args);

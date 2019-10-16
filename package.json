@@ -1,7 +1,7 @@
 {
   "name": "vinli-cli",
-  "version": "1.1.6",
-  "description": "Vinli Developers don't use web interfaces",
+  "version": "1.2.0",
+  "description": "Vinli from the command line!",
   "preferGlobal": true,
   "main": "bin/vinli",
   "scripts": {
@@ -18,7 +18,7 @@
     "vinli",
     "connectedcar"
   ],
-  "author": "Gangstead",
+  "author": "Vinli Devs",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/vinli/vinli-cli/issues"
@@ -36,7 +36,7 @@
     "mocha": "^2.3.4"
   },
   "dependencies": {
-    "bluebird": "^3.1.1",
+    "bluebird": "^3.7.1",
     "cheerio": "^0.19.0",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
@@ -47,6 +47,6 @@
     "prompt": "^1.0.0",
     "table": "^3.7.8",
     "ws": "^1.0.1",
-    "yarp": "^0.4.5"
+    "yarp": "^1.0.0"
   }
 }
