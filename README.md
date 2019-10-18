@@ -3,10 +3,7 @@ Vinli CLI [![Build Status](https://travis-ci.org/vinli/vinli-cli.svg?branch=mast
 Command line interface for developers on the Vinli platform.
 
 [![NPM](https://nodei.co/npm/vinli-cli.png?downloadRank=true)](https://nodei.co/npm/vinli-cli/)
-<!--
-Badge to be added in when there is some stats history:
- [![NPM](https://nodei.co/npm-dl/vinli-cli.png?months=3&height=3)](https://nodei.co/npm/vinli-cli/)
--->
+[![CircleCI](https://circleci.com/gh/vinli/vinli-cli.svg?style=svg)](https://circleci.com/gh/vinli/vinli-cli)
 
 <!-- toc -->
 - [Getting Started](#getting-started)

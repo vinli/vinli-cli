@@ -1,6 +1,6 @@
 {
   "name": "vinli-cli",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Vinli from the command line!",
   "preferGlobal": true,
   "main": "bin/vinli",
