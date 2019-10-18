@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 'use strict';
-
-const assertStack = require('../lib/stack').assertStack;
+const _ = require('lodash');
 const B = require('bluebird');
+const colors = require('colors/safe');
 const program = require('commander');
 const vinlirc = require('../lib/vinlirc');
 
@@ -10,7 +10,12 @@ program
   .description('Print the current stack');
 
 B.resolve(vinlirc.read(program))
-  .then(assertStack)
   .then((options) => {
-    console.log(options.stack);
+    if (_.has(options, 'stack')) {
+      console.log(options.stack);
+    } else if (process.env.VINLI_STACK) {
+      console.log(process.env.VINLI_STACK);
+    } else {
+      console.log(colors.red('stack not set, try running') + colors.cyan(' vinli stack set'));
+    }
   });
