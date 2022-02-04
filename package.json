@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "bluebird": "^3.7.1",
-    "cheerio": "^0.19.0",
+    "cheerio": "^0.22.0",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
     "js-yaml": "^3.5.2",
