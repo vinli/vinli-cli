@@ -33,7 +33,7 @@
     "eslint-config-vinli": "^5.0.0",
     "eslint-plugin-mocha": "^2.0.0",
     "istanbul": "^0.4.2",
-    "mocha": "^2.3.4"
+    "mocha": "^10.1.0"
   },
   "dependencies": {
     "bluebird": "^3.7.1",
